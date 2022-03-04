@@ -1,6 +1,6 @@
 import './../style.css';
 import 'alpinejs';
-import Vibr from './vibr';
+import Vibr from './vibr.js';
 
 const id = document.getElementById.bind(document);
 
