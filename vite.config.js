@@ -28,5 +28,6 @@ if (process.env.NODE_ENV === "development") {
 export default defineConfig({
   plugins: [tailwindcss()],
   ...serverOptions,
+  manifest: true,
   assetsInclude: ['assets/**/*.svg', 'assets/**/*.png', 'sw.js']
 })
