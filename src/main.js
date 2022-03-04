@@ -1,4 +1,4 @@
-import './style.css';
+import '../style.css';
 import 'alpinejs';
 import Vibr from '../vibr';
 
