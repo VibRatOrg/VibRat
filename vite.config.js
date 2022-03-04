@@ -33,7 +33,7 @@ export default defineConfig({
     base: "/",
     srcDir: "src",
     filename: "sw.js",
-    includeAssets: ["assets/**/*.png", "assets/**/*.svg"],
+    includeAssets: ["play/**/*.html", "offline.html"],
     strategies: "injectManifest",
     manifest: {
       "theme_color": "#2563eb",

@@ -1,5 +1,5 @@
 import './../style.css';
-import 'alpinejs';
+import 'alpinejs/dist/cdn';
 import Vibr from './vibr.js';
 
 const id = document.getElementById.bind(document);

@@ -2,6 +2,10 @@
  * Template Used: https://gist.github.com/arnav-kr/0ad065605d2fe20967a6da383aef8b72
  */
 
+import { precacheAndRoute } from 'workbox-precaching';
+
+precacheAndRoute(self.__WB_MANIFEST);
+
 // TODO: Update the cacheName Everytime you want to update your cache
 const cacheName = "v1.0.0";
 const cacheKeepList = [cacheName] // Add Other names of cache that you don't want to delete
