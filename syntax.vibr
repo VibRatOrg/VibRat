@@ -1,0 +1,16 @@
+VIBR%1.0#674703928aeffb8e86c3b452da52382d451b1c5b5a62ac22105eb697f5b346a128c0358c98c45112fd9ff7bb428f2e86e0f46ef408ed9fe976f6278ac6931267
+
+%metadata%
+mimeType -> application/vibr
+version -> {version}
+fileName -> {fileName}
+lastModified -> {lastModified}
+creationDate -> {creationDate}
+author -> {author}
+duration -> {duration}
+signer -> {signer}
+%metadata%end%
+
+%content%
+{content}
+%content%end%

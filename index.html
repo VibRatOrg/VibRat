@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="select-none">
+
+<head prefix="og: https://ogp.me/ns# 
+https://ogp.me/ns/website#">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="favicon.svg">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#2563eb" />
+  <link rel="manifest" href="manifest.webmanifest">
+  <script defer src="./node_modules/alpinejs/dist/cdn.min.js"></script>
+
+  <title>VibRat - The Vibration App</title>
+  <meta name="description"
+    content="World's First of its kind, VibRat lets you record, manage and play vibrations directly from your browser or your any of the devices.">
+  <meta name="keywords"
+    content="VibRat, vibr, .vibr, .vibr files, vibrate, vibration, vibration player, media player, music player, free, arnav-kr, arnavkr_, arnavkr, Arnavofficial, vibr file, player, online player, recorder, onine, online recorder">
+
+  <meta property="og:title" content=" - The Vibration App" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="/" />
+  <meta property="og:image" content="/assets/banner.png" />
+  <meta property="og:image:secure_url" content="/assets/banner.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="VibRat" />
+  <meta property="og:description"
+    content="World's First of its kind, VibRat lets you record, manage and play vibrations directly from your browser or your any of the devices." />
+
+  <meta property="twitter:title" content="VibRat - The Vibration App">
+  <meta name="twitter:image:alt" content="VibRat">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="twitter:image" content="/assets/banner.png">
+  <meta property="twitter:description"
+    content="World's First of its kind, VibRat lets you record, manage and play vibrations directly from your browser or your any of the devices.">
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["SoftwareApplication", "WebApplication"],
+      "name": "VibRat",
+      "operatingSystem": "WEB",
+      "applicationCategory": ["MultimediaApplication", "BrowserApplication", "UtilitiesApplication", "LifestyleApplication"],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "ratingCount": "100"
+      }
+    }
+    </script>
+
+</head>
+
+<body>
+  <div id="app"
+    class="relative w-screen h-screen min-h-screen min-w-full bg-slate-50 dark:bg-slate-900 text-black dark:text-white">
+    <div id="main" class="hidden flex flex-col fixed top-0 left-0 right-0 bottom-0 w-full h-full">
+      <div
+        class="nav-wrapper w-full border-b-2 border-slate-100 dark:border-slate-700 h-14 min-h-14 bg-slate-50 dark:bg-slate-800">
+        <nav class="box-border px-5 py-2 flex items-center justify-between h-full w-full">
+          <button title="GitHub Repository"
+            class="block text-blue-700 dark:text-blue-400 cursor-pointer rounded-full dark:hover:bg-slate-700 hover:bg-slate-100 p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
+              class="h-6 w-6 fill-blue-700 dark:fill-blue-400">
+              <path fill-rule="evenodd"
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+              </path>
+            </svg>
+          </button>
+          <div>
+            <svg class="h-7" viewBox="0 0 1024 404" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M706.113 24C711.686 24 715.551 29.5541 713.615 34.7791L645.426 218.843C644.263 221.981 641.27 224.064 637.924 224.064H413.943C408.433 224.064 404.573 218.624 406.392 213.423L425.759 158.057C426.881 154.848 429.91 152.699 433.31 152.699H585.481C588.761 152.699 591.709 150.696 592.917 147.647L613.437 95.8896C615.519 90.638 611.649 84.9413 606 84.9413H457.609C451.945 84.9413 448.075 79.2179 450.184 73.9617L468.22 29.0205C469.437 25.9876 472.377 24 475.644 24H706.113Z"
+                fill="#3982D8" />
+              <path
+                d="M29.0836 35.2857C26.6988 29.9914 30.5712 24 36.3778 24H108.106C111.32 24 114.221 25.9225 115.474 28.8816L229.671 298.668C232.463 305.263 241.848 305.149 244.479 298.488L310.67 130.891C311.877 127.837 314.827 125.83 318.111 125.83H376.393C382.008 125.83 385.876 131.463 383.86 136.703L292.19 374.899C291.002 377.988 288.034 380.026 284.724 380.026H189.542C186.395 380.026 183.541 378.181 182.248 375.311L29.0836 35.2857Z"
+                fill="#3982D8" />
+              <path
+                d="M765.346 24C762.032 24 759.06 26.044 757.875 29.1394L627.685 369.165C625.68 374.403 629.547 380.026 635.156 380.026H693.414C696.721 380.026 699.687 377.991 700.877 374.906L810.79 90.0613C811.981 86.976 814.947 84.9413 818.254 84.9413H880.525C886.133 84.9413 890.001 90.5612 887.997 95.799L853.982 184.74C851.979 189.978 855.847 195.598 861.454 195.598H925.806C929.076 195.598 932.016 193.609 933.232 190.574L995.6 34.9764C997.707 29.7208 993.837 24 988.175 24H765.346Z"
+                fill="#FE5C36" />
+              <path
+                d="M550.335 261.352C551.604 258.43 554.487 256.539 557.673 256.539H621.41C627.078 256.539 630.948 262.27 628.831 267.527L585.558 375.014C584.338 378.042 581.401 380.026 578.136 380.026H353.159C347.444 380.026 343.573 374.207 345.781 368.935L390.799 261.449C392.045 258.475 394.954 256.539 398.178 256.539H458.345C464.025 256.539 467.895 262.292 465.756 267.553L450.257 305.665C448.118 310.926 451.988 316.679 457.668 316.679H521.059C524.245 316.679 527.128 314.788 528.397 311.866L550.335 261.352Z"
+                fill="#FE5C36" />
+              <path
+                d="M347.806 28.9346C349.045 25.9473 351.961 24 355.195 24H415.653C421.357 24 425.228 29.7974 423.043 35.0654L402.071 85.6196C400.832 88.6069 397.916 90.5542 394.682 90.5542H334.223C328.52 90.5542 324.649 84.7568 326.834 79.4888L347.806 28.9346Z"
+                fill="#FE5C36" />
+            </svg>
+            <!-- <img src="./assets/vibrat.svg" alt="VibRat" class="h-7" width="70.97px" height="28px"> -->
+          </div>
+          <!-- <span class="block title font-medium p-2 w-8 h-8 rounded-md bg-blue-300 dark:bg-blue-500"></span> -->
+          <label for="import-input" role="button" aria-label="Import Recording File" title="Import Recording File"
+            class="block text-blue-700 disabled:text-gray-400 dark:text-blue-400 cursor-pointer rounded-full dark:hover:bg-slate-700 hover:bg-slate-100 p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <input type="file" accept=".vibr" class="hidden" id="import-input">
+          </label>
+        </nav>
+      </div>
+      <div class="main w-full h-full bg-slate-200 dark:bg-slate-900 overflow-y-auto">
+        <div
+          class="relative vibr-card-container w-full max-w-full h-max box-border py-6 px-4 sm:py-4 sm:px-3 grid gap-3 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2"
+          id="recordings-container">
+          <!-- <script>
+            for (let a = 0; a < 12; a++) {
+              document.querySelector(" .vibr-card-container").innerHTML +=`<div
+          class="vibr-card p-4 max-w-full flex items-center justify-between shadow-md rounded-md bg-slate-100 dark:bg-slate-800">
+          <div class="vibr-card-play mr-3 h-full flex items-center justify-start">
+            <svg xmlns="http://www.w3.org/2000/svg"
+              class="h-8 w-8 shadow-sm border rounded-full border-gray-300 dark:border-gray-700 bg-opacity-70 fill-green-500"
+              viewBox="0 0 20 20" fill="currentColor" id="track-play-icon">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                clip-rule="evenodd" />
+            </svg>
+          </div>
+          <div class="vibr-card-details">
+            <span class="flex title font-medium w-full justify-start"><span>New Recording</span></span>
+          </div>
+          <div class="vibr-card-actions ml-3 p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-slate-800 dark:fill-slate-100"
+              viewBox="0 0 20 20" fill="currentColor">
+              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+            </svg>
+          </div>
+        </div>`;
+        }
+        </script> -->
+          <!-- <div
+            class="vibr-card py-8 px-4 max-w-full flex items-center justify-between shadow-md rounded-md bg-slate-100 dark:bg-slate-800">
+            <div class="vibr-card-play mr-3 flex items-center justify-start cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 shadow-sm border rounded-full border-gray-300 dark:border-gray-700 bg-opacity-70 fill-green-500"
+                viewBox="0 0 20 20" fill="currentColor" id="track-play-icon">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                  clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="vibr-card-details w-full flex justify-start title font-medium">
+              <span>New Recording</span>
+            </div>
+            <div class="vibr-card-actions ml-3 ">
+              <div x-data="{ open: false }" x-init="open = false" @keydown.escape.stop="open = false;"
+                class="relative inline-block text-left vibr-action-dropdown">
+                <div class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full cursor-pointer"
+                  @click="open == false ? (open = true, closeAllDropdowns($event)) : open = false"
+                  @keydown.tab="open == false ? (open = true, closeAllDropdowns($event)) : open = false">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-slate-800 dark:fill-slate-100"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                  </svg>
+                </div>
+
+                <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                  x-transition:enter-start="transform opacity-0 scale-95"
+                  x-transition:enter-end="transform opacity-100 scale-100"
+                  x-transition:leave="transition ease-in duration-75"
+                  x-transition:leave-start="transform opacity-100 scale-100"
+                  x-transition:leave-end="transform opacity-0 scale-95"
+                  class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-slate-100 dark:bg-slate-700 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  x-ref="menu-items" x-description="Actions" role="menu" aria-orientation="vertical"
+                  aria-labelledby="menu-button" tabindex="-1" @keydown.tab="open = false"
+                  @keydown.enter.prevent="open = false;" @keyup.space.prevent="open = false;">
+                  <div role="none" class="py-1 text-sm text-gray-700 dark:text-slate-200">
+                    <div
+                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
+                      role="menuitem" tabindex="-1" id="menu-item-0" @click="open = false;">
+                      <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                      </div>
+                      <span>Download</span>
+                    </div>
+                    <div
+                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
+                      role="menuitem" tabindex="-1" id="menu-item-1" @click="open = false;">
+                      <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                            clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                      <span>Play</span>
+                    </div>
+                    <div
+                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
+                      role="menuitem" tabindex="-1" id="menu-item-2" @click="open = false;">
+                      <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </div>
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <!-- <div
+            class="vibr-card py-8 px-4 max-w-full flex items-center justify-between shadow-md rounded-md bg-slate-100 dark:bg-slate-800">
+            <div class="vibr-card-play mr-3 flex items-center justify-start cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                class="h-8 w-8 shadow-sm border rounded-full border-gray-300 dark:border-gray-700 bg-opacity-70 fill-green-500"
+                viewBox="0 0 20 20" fill="currentColor" id="track-play-icon">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                  clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="vibr-card-details w-full flex justify-start title font-medium">
+              <span>New Recording</span>
+            </div>
+            <div class="vibr-card-actions ml-3 ">
+              <div x-data="{ open: false }" x-init="open = false" @keydown.escape.stop="open = false;"
+                class="relative inline-block text-left vibr-action-dropdown">
+                <div class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full cursor-pointer"
+                  @click="open == false ? (open = true, closeAllDropdowns($event)) : open = false"
+                  @keydown.tab="open == false ? (open = true, closeAllDropdowns($event)) : open = false">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-slate-800 dark:fill-slate-100"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path
+                      d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                  </svg>
+                </div>
+
+                <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                  x-transition:enter-start="transform opacity-0 scale-95"
+                  x-transition:enter-end="transform opacity-100 scale-100"
+                  x-transition:leave="transition ease-in duration-75"
+                  x-transition:leave-start="transform opacity-100 scale-100"
+                  x-transition:leave-end="transform opacity-0 scale-95"
+                  class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-slate-100 dark:bg-slate-700 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  x-ref="menu-items" x-description="Actions" role="menu" aria-orientation="vertical"
+                  aria-labelledby="menu-button" tabindex="-1" @keydown.tab="open = false"
+                  @keydown.enter.prevent="open = false;" @keyup.space.prevent="open = false;">
+                  <div role="none" class="py-1 text-sm text-gray-700 dark:text-slate-200">
+                    <div
+                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
+                      role="menuitem" tabindex="-1" id="menu-item-0" @click="open = false;">
+                      <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                      </div>
+                      <span>Download</span>
+                    </div>
+                    <div
+                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
+                      role="menuitem" tabindex="-1" id="menu-item-1" @click="open = false;">
+                      <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                            clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                      <span>Play</span>
+                    </div>
+                    <div
+                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
+                      role="menuitem" tabindex="-1" id="menu-item-2" @click="open = false;">
+                      <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                          stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </div>
+                      <span>Delete</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+        </div>
+      </div>
+      <!-- <div
+        class="nav-wrapper w-full border-t-2 border-slate-100 dark:border-slate-700 h-14 min-h-14 bg-slate-50 dark:bg-slate-800">
+        <nav class="px-5 py-2 h-full">
+
+        </nav>
+      </div> -->
+      <div id="fab"
+        class="z-20 fab fixed bottom-6 right-6 shadow-lg rounded-full bg-blue-600 w-12 h-12 cursor-pointer hover:shadow-xl hover:bg-blue-700 dark:hover:bg-blue-500 transition-colors flex justify-center items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-white stroke-white" viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+        </svg>
+      </div>
+    </div>
+    <div id="record" class="flex flex-col fixed top-0 left-0 right-0 bottom-0 w-full h-full">
+      <div
+        class="nav-wrapper w-full border-b-2 border-slate-100 dark:border-slate-700 h-14 min-h-14 bg-slate-50 dark:bg-slate-800">
+        <nav class="box-border px-5 py-2 flex items-center justify-between h-full w-full">
+          <button class="block text-blue-700 dark:text-blue-400 cursor-pointer" id="cancel-recording">Cancel</button>
+          <span class="block title font-medium">New Recording</span>
+          <button
+            class="block text-blue-700 disabled:text-gray-400 dark:text-blue-400 cursor-pointer disabled:cursor-default"
+            disabled id="save-recording">Save</button>
+        </nav>
+      </div>
+      <div id="tap-area"
+        class="relative flex items-center justify-center main w-full h-full bg-slate-200 dark:bg-slate-900">
+        <p class="block text-gray-500 dark:text-gray-600">Tap To Create a Vibration Pattern</p>
+        <div id="pseudo-cursor"
+          class="hidden absolute pseudo-cursor w-12 h-12 border-2 border-slate-100 bg-slate-300 dark:border-slate-600 dark:bg-slate-800 rounded-full opacity-50">
+        </div>
+      </div>
+      <div
+        class="flex items-center justify-center px-4 py-2 seekbar-wrapper h-12 min-h-12 border-t-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+        <div id="seekbar" class="overflow-hidden relative seekbar bg-slate-300 dark:bg-slate-700 h-2 w-full rounded-md">
+          <div id="seek-progress"
+            class="seek-progress h-full w-0 rounded-md bg-blue-700 dark:bg-blue-200 opacity-70 dark:opacity-50"></div>
+        </div>
+      </div>
+      <div
+        class="nav-wrapper w-full h-14 min-h-14 border-t-2 border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800">
+        <nav class="px-5 py-2 flex items-center justify-between h-full w-full">
+          <button
+            class="block text-blue-700 disabled:text-gray-400 dark:text-blue-400 cursor-pointer disabled:cursor-default"
+            id="play-recording" disabled>Play</button>
+          <button
+            class="block text-blue-700 disabled:text-gray-400 dark:text-blue-400 cursor-pointer disabled:cursor-default"
+            disabled id="stop/record" data-action="stop">Stop</button>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <div id="save-dialog" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="save-recording" role="dialog"
+    aria-roledescription="Dialog" aria-modal="true" x-data="{ open: false }" @keydown.window.escape="open = false"
+    x-show="open" x-ref="dialog">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!--
+        Background overlay, show/hide based on modal state.
+  
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+        x-description="Background overlay, show/hide based on modal state."
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true">
+      </div>
+
+      <!-- This element is to trick the browser into centering the modal contents. -->
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+      <!--
+        Modal panel, show/hide based on modal state.
+  
+        Entering: "ease-out duration-300"
+          From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          To: "opacity-100 translate-y-0 sm:scale-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100 translate-y-0 sm:scale-100"
+          To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      -->
+      <div x-show="open" x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-description="Save Recording"
+        class="inline-block align-bottom bg-white dark:bg-gray-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full w-full">
+        <div class="bg-white dark:bg-gray-900 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+          <div class="sm:flex sm:items-center justify-center">
+            <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+              <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white text-center" id="modal-title">New
+                Recording</h3>
+              <div class="w-full flex items-center justify-center mt-3">
+                <input type="text" required name="recording-name" id="recording-name" autocomplete="off"
+                  class="dark:text-white focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border border-gray-300 dark:border-gray-700 rounded-md px-3 py-2 dark:bg-gray-900">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-white dark:bg-gray-900 px-4 py-3 pb-4 pt-3 sm:px-6 sm:flex sm:flex-row-reverse flex flex-row-reverse gap-2">
+          <button type="button"
+            class="save-btn w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-gray-900 sm:text-sm">Save</button>
+          <button type="button"
+            class="cancel-btn w-full inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-700 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-gray-900 sm:text-sm">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="vibr-player" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="save-recording" role="dialog"
+    aria-roledescription="Dialog" aria-modal="true" x-data="{ open: false }" @keydown.window.escape="open = false"
+    x-show="open" x-ref="dialog">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+      <!--
+        Background overlay, show/hide based on modal state.
+  
+        Entering: "ease-out duration-300"
+          From: "opacity-0"
+          To: "opacity-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100"
+          To: "opacity-0"
+      -->
+      <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+        x-description="Background overlay, show/hide based on modal state."
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true">
+      </div>
+
+      <!-- This element is to trick the browser into centering the modal contents. -->
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+      <!--
+        Modal panel, show/hide based on modal state.
+  
+        Entering: "ease-out duration-300"
+          From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          To: "opacity-100 translate-y-0 sm:scale-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100 translate-y-0 sm:scale-100"
+          To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      -->
+      <div x-show="open" x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-description="Save Recording"
+        class="inline-block align-bottom bg-white dark:bg-gray-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full w-full">
+        <div class="bg-white dark:bg-gray-900 px-4 pt-5 sm:p-6 pb-0 sm:pb-0">
+          <div class="sm:flex sm:items-center justify-center">
+            <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+              <h3 class="text-md leading-6 font-normal text-gray-900 dark:text-white text-left" id="track-name">Untitled
+                1</h3>
+              <div class="w-full flex items-center justify-center mt-0">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-white dark:bg-gray-900 px-3 py-3 pb-4 pt-3 sm:px-5 sm:flex sm:flex-row flex flex-row gap-0 items-center">
+          <div id="play/stop" class="play/stop p-0.5 flex items-center justify-center cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg"
+              class="hidden h-7 w-7 shadow-sm border rounded-full border-gray-300 dark:border-gray-700 bg-opacity-70 fill-green-500"
+              viewBox="0 0 20 20" fill="currentColor" id="track-play-icon">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                clip-rule="evenodd" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" id="track-stop-icon"
+              class="h-7 w-7 shadow-sm border rounded-full border-gray-300 dark:border-gray-700 bg-opacity-70 fill-red-500 dark:fill-red-400"
+              viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
+                clip-rule="evenodd" />
+            </svg>
+            <!-- <svg xmlns="http://www.w3.org/2000/svg"
+              class="h-7 w-7 shadow-sm border rounded-full border-gray-300 dark:border-gray-700 bg-opacity-70 fill-orange-500 dark:fill-orange-400"
+              viewBox="0 0 20 20" fill="currentColor" id="track-pause-icon">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg> -->
+          </div>
+          <div class="flex items-center justify-center px-2 py-1 vibr-seekbar-wrapper h-6 min-h-6 w-full">
+            <div id="vibr-seekbar"
+              class="overflow-hidden relative seekbar bg-slate-300 dark:bg-slate-700 h-2 w-full rounded-md">
+              <div id="vibr-seek-progress"
+                class="vibr-seek-progress h-full w-0 rounded-md bg-blue-700 dark:bg-blue-200 opacity-70 dark:opacity-50">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
