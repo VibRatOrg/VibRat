@@ -3,10 +3,11 @@ import tailwindcss from 'tailwindcss';
 import { readFileSync } from 'fs';
 import dotenv from 'dotenv';
 dotenv.config();
-
+import { VitePWA } from "vite-plugin-pwa";
 
 let serverOptions = {};
-if (process.env.NODE_ENV === "development") {
+let mode = process.env.NODE_ENV === "development" ? "development" : "production";
+if (mode == "development") {
   serverOptions = {
     server: {
       port: 443,
@@ -26,8 +27,194 @@ if (process.env.NODE_ENV === "development") {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [tailwindcss()],
+  plugins: [tailwindcss(),
+  VitePWA({
+    mode,
+    base: "/",
+    srcDir: "src",
+    filename: "sw.js",
+    includeAssets: ["assets/**/*.png", "assets/**/*.svg"],
+    strategies: "injectManifest",
+    manifest: {
+      "theme_color": "#2563eb",
+      "background_color": "#ffffff",
+      "display": "standalone",
+      "id": "/",
+      "scope": "/",
+      "start_url": "/",
+      "orientation": "portrait",
+      "name": "VibRat",
+      "short_name": "VibRat",
+      "lang": "en",
+      "dir": "ltr",
+      "categories": [
+        "music player",
+        "audio player",
+        "vibration player",
+        "media player"
+      ],
+      "description": "World's First of its kind, VibRat lets you record, manage and play vibrations directly from your browser or your any of the devices.",
+      "icons": [
+        {
+          "src": "/assets/vibrat.png",
+          "sizes": "1024x404",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/assets/vibrat.svg",
+          "sizes": "1024x404",
+          "type": "image/svg+xml",
+          "purpose": "any"
+        },
+        {
+          "src": "/assets/logo/1024.svg",
+          "sizes": "1024x1024",
+          "type": "image/svg+xml",
+          "purpose": "any"
+        },
+        {
+          "src": "/assets/logo/1024_maskable.png",
+          "sizes": "1024x1024",
+          "type": "image/png",
+          "purpose": "maskable"
+        },
+        {
+          "src": "/assets/logo/1024.png",
+          "sizes": "1024x1024",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/assets/logo/512_maskable.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "maskable"
+        },
+        {
+          "src": "/assets/logo/512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/assets/logo/384_maskable.png",
+          "sizes": "384x384",
+          "type": "image/png",
+          "purpose": "maskable"
+        },
+        {
+          "src": "/assets/logo/384.png",
+          "sizes": "384x384",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/assets/logo/192_maskable.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "maskable"
+        },
+        {
+          "src": "/assets/logo/192.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/assets/logo/128_maskable.png",
+          "sizes": "128x128",
+          "type": "image/png",
+          "purpose": "maskable"
+        },
+        {
+          "src": "/assets/logo/128.png",
+          "sizes": "128x128",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/assets/logo/96_maskable.png",
+          "sizes": "96x96",
+          "type": "image/png",
+          "purpose": "maskable"
+        },
+        {
+          "src": "/assets/logo/96.png",
+          "sizes": "96x96",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/assets/logo/72_maskable.png",
+          "sizes": "72x72",
+          "type": "image/png",
+          "purpose": "maskable"
+        },
+        {
+          "src": "/assets/logo/72.png",
+          "sizes": "72x72",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/assets/logo/48_maskable.png",
+          "sizes": "48x48",
+          "type": "image/png",
+          "purpose": "maskable"
+        },
+        {
+          "src": "/assets/logo/48.png",
+          "sizes": "48x48",
+          "type": "image/png",
+          "purpose": "any"
+        }
+      ],
+      "share_target": {
+        "action": "/play/",
+        "method": "POST",
+        "enctype": "multipart/form-data",
+        "params": {
+          "title": "name",
+          "files": [
+            {
+              "name": "vibr",
+              "accept": [
+                "application/vibr",
+                ".vibr"
+              ]
+            }
+          ]
+        }
+      },
+      "file_handlers": [
+        {
+          "action": "/play/",
+          "name": "VibRat VIBR File",
+          "accept": {
+            "application/vibr": [
+              ".vibr"
+            ]
+          },
+          "icons": [
+            {
+              "src": "/assets/logo/1024.png",
+              "sizes": "1024x1024"
+            }
+          ]
+        }
+      ],
+      "related_applications": [
+        {
+          "platform": "webapp",
+          "url": "https://arnav/manifest.webmanifest"
+        }
+      ]
+    },
+  }),
+  ],
   ...serverOptions,
   manifest: true,
+
   assetsInclude: ['assets/**/*.svg', 'assets/**/*.png', 'sw.js']
 })
