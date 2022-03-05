@@ -335,7 +335,7 @@ function downloadRecording(el) {
 function playCardRecording(el) {
   let parent = el.closest(".vibr-card");
   let pdata = JSON.parse(parent.dataset.data);
-  playRecording(pdata);
+  playRecording(pdata, parent.dataset.name);
 }
 window.deleteRecording = deleteRecording;
 window.downloadRecording = downloadRecording;
@@ -562,6 +562,7 @@ function togglePlayerDialog(bool = true) {
 
 function stopPlayingRecording() {
   navigator.vibrate(0);
+  clearInterval(playInterval);
   togglePlayerDialog(false);
   // id("track-play-icon").classList.remove("hidden");
   // id("track-stop-icon").classList.add("hidden");
@@ -571,13 +572,14 @@ function stopPlayingRecording() {
   });
 }
 
-function playRecording(data) {
+function playRecording(data, name = "Untitled") {
   togglePlayerDialog(true);
   navigator.vibrate(0);
   data.pop();
   let s = 0;
   let playDuration = data.reduce((a, b) => parseFloat(a) + parseFloat(b));
   let playTimeElapsed = 0;
+  id("track-name").innerText = name;
   for (let x in data) {
     if (x % 2 === 0) {
       let ts = document.createElement("div");
