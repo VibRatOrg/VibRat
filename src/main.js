@@ -25,7 +25,7 @@ let Database = {
 }, isLS;
 let isRecording = false, isPsCursorVisible = false, recordingDuration = 60000, isStopped = true;
 let data = [], snapshots = [], currentIndex = 0, timeElapsed = 0, startTime = 0, timeLoop = null;
-let TBM = new Tabs(["main", "record"], "record");
+let TBM = new Tabs(["loader", "main", "record"], "loader");
 window.TBM = TBM;
 let VibRat = new Vibr();
 
@@ -48,7 +48,7 @@ if (isLS) {
   }
 }
 
-TBM.open("main");
+// TBM.open("main");
 // let x = 0;
 
 // do {
@@ -57,13 +57,13 @@ TBM.open("main");
 // } while (x < 15)
 
 // register service worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').then(function (registration) {
-    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-  }).catch(function (err) {
-    console.log('ServiceWorker registration failed: ', err);
-  });
-}
+// if ('serviceWorker' in navigator) {
+//   navigator.serviceWorker.register('/sw.js').then(function (registration) {
+//     console.log('ServiceWorker registration successful with scope: ', registration.scope);
+//   }).catch(function (err) {
+//     console.log('ServiceWorker registration failed: ', err);
+//   });
+// }
 
 document.addEventListener("click", (e) => {
   var t = document.querySelectorAll(".vibr-action-dropdown");
@@ -598,3 +598,17 @@ let d = [406
   , 999.7000000476837
   , 2123.199999809265]
 // playRecording(d)
+
+
+let loadTime = performance.now() - window.__LOAD_START;
+window.__LAOD_TIME = loadTime;
+if (loadTime > 2000) {
+  window.__IS_LOADED = true;
+  TBM.open("main");
+}
+else {
+  setTimeout(() => {
+    window.__IS_LOADED = true;
+    TBM.open("main");
+  }, 2000 - loadTime);
+}

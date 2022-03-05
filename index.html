@@ -5,10 +5,17 @@
 https://ogp.me/ns/website#">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script type="text/javascript">
+    window.__LOAD_START = performance.now();
+    window.__IS_LOADED = false;
+  </script>
+
   <link rel="shortcut icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="favicon.svg">
   <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#2563eb" />
+  <link rel="manifest" href="manifest.webmanifest">
 
   <title>VibRat - The Vibration App</title>
   <meta name="description"
@@ -49,12 +56,41 @@ https://ogp.me/ns/website#">
       }
     }
     </script>
-
+  <style>
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
   <div id="app"
     class="relative w-screen h-screen min-h-screen min-w-full bg-slate-50 dark:bg-slate-900 text-black dark:text-white">
+    <div id="loader"
+      class="flex flex-col fixed top-0 left-0 right-0 bottom-0 w-full h-full items-center justify-center">
+      <svg class="lg:max-w-sm sm:max-w-min w-full p-12" viewBox="0 0 1024 404" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M706.113 24C711.686 24 715.551 29.5541 713.615 34.7791L645.426 218.843C644.263 221.981 641.27 224.064 637.924 224.064H413.943C408.433 224.064 404.573 218.624 406.392 213.423L425.759 158.057C426.881 154.848 429.91 152.699 433.31 152.699H585.481C588.761 152.699 591.709 150.696 592.917 147.647L613.437 95.8896C615.519 90.638 611.649 84.9413 606 84.9413H457.609C451.945 84.9413 448.075 79.2179 450.184 73.9617L468.22 29.0205C469.437 25.9876 472.377 24 475.644 24H706.113Z"
+          fill="#3982D8" />
+        <path
+          d="M29.0836 35.2857C26.6988 29.9914 30.5712 24 36.3778 24H108.106C111.32 24 114.221 25.9225 115.474 28.8816L229.671 298.668C232.463 305.263 241.848 305.149 244.479 298.488L310.67 130.891C311.877 127.837 314.827 125.83 318.111 125.83H376.393C382.008 125.83 385.876 131.463 383.86 136.703L292.19 374.899C291.002 377.988 288.034 380.026 284.724 380.026H189.542C186.395 380.026 183.541 378.181 182.248 375.311L29.0836 35.2857Z"
+          fill="#3982D8" />
+        <path
+          d="M765.346 24C762.032 24 759.06 26.044 757.875 29.1394L627.685 369.165C625.68 374.403 629.547 380.026 635.156 380.026H693.414C696.721 380.026 699.687 377.991 700.877 374.906L810.79 90.0613C811.981 86.976 814.947 84.9413 818.254 84.9413H880.525C886.133 84.9413 890.001 90.5612 887.997 95.799L853.982 184.74C851.979 189.978 855.847 195.598 861.454 195.598H925.806C929.076 195.598 932.016 193.609 933.232 190.574L995.6 34.9764C997.707 29.7208 993.837 24 988.175 24H765.346Z"
+          fill="#FE5C36" />
+        <path
+          d="M550.335 261.352C551.604 258.43 554.487 256.539 557.673 256.539H621.41C627.078 256.539 630.948 262.27 628.831 267.527L585.558 375.014C584.338 378.042 581.401 380.026 578.136 380.026H353.159C347.444 380.026 343.573 374.207 345.781 368.935L390.799 261.449C392.045 258.475 394.954 256.539 398.178 256.539H458.345C464.025 256.539 467.895 262.292 465.756 267.553L450.257 305.665C448.118 310.926 451.988 316.679 457.668 316.679H521.059C524.245 316.679 527.128 314.788 528.397 311.866L550.335 261.352Z"
+          fill="#FE5C36" />
+        <path
+          d="M347.806 28.9346C349.045 25.9473 351.961 24 355.195 24H415.653C421.357 24 425.228 29.7974 423.043 35.0654L402.071 85.6196C400.832 88.6069 397.916 90.5542 394.682 90.5542H334.223C328.52 90.5542 324.649 84.7568 326.834 79.4888L347.806 28.9346Z"
+          fill="#FE5C36">
+          <!-- Animate slow twinkle with ease -->
+          <animate attributeName="opacity" repeatCount="indefinite" dur="1s" values=".3;1;.3" keyTimes="0;0.5;1"
+            keySplines="0.2 0.2 0.4 0.8;0.2 0.6 0.8 1" calcMode="spline" />
+        </path>
+      </svg>
+    </div>
     <div id="main" class="hidden flex flex-col fixed top-0 left-0 right-0 bottom-0 w-full h-full">
       <div
         class="nav-wrapper w-full border-b-2 border-slate-100 dark:border-slate-700 h-14 min-h-14 bg-slate-50 dark:bg-slate-800">
@@ -103,198 +139,8 @@ https://ogp.me/ns/website#">
       <div class="main w-full h-full bg-slate-200 dark:bg-slate-900 overflow-y-auto">
         <div
           class="relative vibr-card-container w-full max-w-full h-max box-border py-6 px-4 sm:py-4 sm:px-3 grid gap-3 lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2"
-          id="recordings-container">
-          <!-- <script>
-            for (let a = 0; a < 12; a++) {
-              document.querySelector(" .vibr-card-container").innerHTML +=`<div
-          class="vibr-card p-4 max-w-full flex items-center justify-between shadow-md rounded-md bg-slate-100 dark:bg-slate-800">
-          <div class="vibr-card-play mr-3 h-full flex items-center justify-start">
-            <svg xmlns="http://www.w3.org/2000/svg"
-              class="h-8 w-8 shadow-sm border rounded-full border-gray-300 dark:border-gray-700 bg-opacity-70 fill-green-500"
-              viewBox="0 0 20 20" fill="currentColor" id="track-play-icon">
-              <path fill-rule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                clip-rule="evenodd" />
-            </svg>
-          </div>
-          <div class="vibr-card-details">
-            <span class="flex title font-medium w-full justify-start"><span>New Recording</span></span>
-          </div>
-          <div class="vibr-card-actions ml-3 p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-slate-800 dark:fill-slate-100"
-              viewBox="0 0 20 20" fill="currentColor">
-              <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-            </svg>
-          </div>
-        </div>`;
-        }
-        </script> -->
-          <!-- <div
-            class="vibr-card py-8 px-4 max-w-full flex items-center justify-between shadow-md rounded-md bg-slate-100 dark:bg-slate-800">
-            <div class="vibr-card-play mr-3 flex items-center justify-start cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 shadow-sm border rounded-full border-gray-300 dark:border-gray-700 bg-opacity-70 fill-green-500"
-                viewBox="0 0 20 20" fill="currentColor" id="track-play-icon">
-                <path fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                  clip-rule="evenodd" />
-              </svg>
-            </div>
-            <div class="vibr-card-details w-full flex justify-start title font-medium">
-              <span>New Recording</span>
-            </div>
-            <div class="vibr-card-actions ml-3 ">
-              <div x-data="{ open: false }" x-init="open = false" @keydown.escape.stop="open = false;"
-                class="relative inline-block text-left vibr-action-dropdown">
-                <div class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full cursor-pointer"
-                  @click="open == false ? (open = true, closeAllDropdowns($event)) : open = false"
-                  @keydown.tab="open == false ? (open = true, closeAllDropdowns($event)) : open = false">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-slate-800 dark:fill-slate-100"
-                    viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                  </svg>
-                </div>
-
-                <div x-show="open" x-transition:enter="transition ease-out duration-100"
-                  x-transition:enter-start="transform opacity-0 scale-95"
-                  x-transition:enter-end="transform opacity-100 scale-100"
-                  x-transition:leave="transition ease-in duration-75"
-                  x-transition:leave-start="transform opacity-100 scale-100"
-                  x-transition:leave-end="transform opacity-0 scale-95"
-                  class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-slate-100 dark:bg-slate-700 ring-1 ring-black ring-opacity-5 focus:outline-none"
-                  x-ref="menu-items" x-description="Actions" role="menu" aria-orientation="vertical"
-                  aria-labelledby="menu-button" tabindex="-1" @keydown.tab="open = false"
-                  @keydown.enter.prevent="open = false;" @keyup.space.prevent="open = false;">
-                  <div role="none" class="py-1 text-sm text-gray-700 dark:text-slate-200">
-                    <div
-                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
-                      role="menuitem" tabindex="-1" id="menu-item-0" @click="open = false;">
-                      <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                          stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                      </div>
-                      <span>Download</span>
-                    </div>
-                    <div
-                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
-                      role="menuitem" tabindex="-1" id="menu-item-1" @click="open = false;">
-                      <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                            clip-rule="evenodd" />
-                        </svg>
-                      </div>
-                      <span>Play</span>
-                    </div>
-                    <div
-                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
-                      role="menuitem" tabindex="-1" id="menu-item-2" @click="open = false;">
-                      <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                          stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </div>
-                      <span>Delete</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-          <!-- <div
-            class="vibr-card py-8 px-4 max-w-full flex items-center justify-between shadow-md rounded-md bg-slate-100 dark:bg-slate-800">
-            <div class="vibr-card-play mr-3 flex items-center justify-start cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 shadow-sm border rounded-full border-gray-300 dark:border-gray-700 bg-opacity-70 fill-green-500"
-                viewBox="0 0 20 20" fill="currentColor" id="track-play-icon">
-                <path fill-rule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                  clip-rule="evenodd" />
-              </svg>
-            </div>
-            <div class="vibr-card-details w-full flex justify-start title font-medium">
-              <span>New Recording</span>
-            </div>
-            <div class="vibr-card-actions ml-3 ">
-              <div x-data="{ open: false }" x-init="open = false" @keydown.escape.stop="open = false;"
-                class="relative inline-block text-left vibr-action-dropdown">
-                <div class="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full cursor-pointer"
-                  @click="open == false ? (open = true, closeAllDropdowns($event)) : open = false"
-                  @keydown.tab="open == false ? (open = true, closeAllDropdowns($event)) : open = false">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-slate-800 dark:fill-slate-100"
-                    viewBox="0 0 20 20" fill="currentColor">
-                    <path
-                      d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                  </svg>
-                </div>
-
-                <div x-show="open" x-transition:enter="transition ease-out duration-100"
-                  x-transition:enter-start="transform opacity-0 scale-95"
-                  x-transition:enter-end="transform opacity-100 scale-100"
-                  x-transition:leave="transition ease-in duration-75"
-                  x-transition:leave-start="transform opacity-100 scale-100"
-                  x-transition:leave-end="transform opacity-0 scale-95"
-                  class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-slate-100 dark:bg-slate-700 ring-1 ring-black ring-opacity-5 focus:outline-none"
-                  x-ref="menu-items" x-description="Actions" role="menu" aria-orientation="vertical"
-                  aria-labelledby="menu-button" tabindex="-1" @keydown.tab="open = false"
-                  @keydown.enter.prevent="open = false;" @keyup.space.prevent="open = false;">
-                  <div role="none" class="py-1 text-sm text-gray-700 dark:text-slate-200">
-                    <div
-                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
-                      role="menuitem" tabindex="-1" id="menu-item-0" @click="open = false;">
-                      <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                          stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                      </div>
-                      <span>Download</span>
-                    </div>
-                    <div
-                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
-                      role="menuitem" tabindex="-1" id="menu-item-1" @click="open = false;">
-                      <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                            clip-rule="evenodd" />
-                        </svg>
-                      </div>
-                      <span>Play</span>
-                    </div>
-                    <div
-                      class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
-                      role="menuitem" tabindex="-1" id="menu-item-2" @click="open = false;">
-                      <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                          stroke="currentColor" stroke-width="2">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </div>
-                      <span>Delete</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-        </div>
+          id="recordings-container"></div>
       </div>
-      <!-- <div
-        class="nav-wrapper w-full border-t-2 border-slate-100 dark:border-slate-700 h-14 min-h-14 bg-slate-50 dark:bg-slate-800">
-        <nav class="px-5 py-2 h-full">
-
-        </nav>
-      </div> -->
       <div id="fab"
         class="z-20 fab fixed bottom-6 right-6 shadow-lg rounded-full bg-blue-600 w-12 h-12 cursor-pointer hover:shadow-xl hover:bg-blue-700 dark:hover:bg-blue-500 transition-colors flex justify-center items-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 fill-white stroke-white" viewBox="0 0 24 24"
@@ -303,7 +149,7 @@ https://ogp.me/ns/website#">
         </svg>
       </div>
     </div>
-    <div id="record" class="flex flex-col fixed top-0 left-0 right-0 bottom-0 w-full h-full">
+    <div id="record" class="hidden flex flex-col fixed top-0 left-0 right-0 bottom-0 w-full h-full">
       <div
         class="nav-wrapper w-full border-b-2 border-slate-100 dark:border-slate-700 h-14 min-h-14 bg-slate-50 dark:bg-slate-800">
         <nav class="box-border px-5 py-2 flex items-center justify-between h-full w-full">
@@ -491,6 +337,7 @@ https://ogp.me/ns/website#">
       </div>
     </div>
   </div>
+  <div class="hidden mt-28"></div>
   <script type="module" src="/src/main.js"></script>
 </body>
 
