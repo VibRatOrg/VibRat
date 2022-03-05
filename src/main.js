@@ -1,6 +1,7 @@
 import './../style.css';
 import 'alpinejs/dist/cdn';
 import Vibr from './vibr.js';
+import ServiceWorkerManager from './registerSw';
 
 const id = document.getElementById.bind(document);
 
@@ -47,6 +48,26 @@ if (isLS) {
     localStorage.setItem("VibratDatabase", JSON.stringify(Database));
   }
 }
+
+let swManager = new ServiceWorkerManager("/sw.js");
+
+swManager.init();
+
+let refreshing = false;
+
+id("reload-btn").addEventListener("click", () => {
+  window.location.reload();
+});
+
+navigator.serviceWorker.addEventListener('controllerchange', () => {
+  if (refreshing) return;
+  id("update-popup")["_x_dataStack"][0].open = true;
+  refreshing = true;
+});
+
+window.addEventListener("updatefound", () => {
+  console.log("New Update Available!");
+});
 
 // TBM.open("main");
 // let x = 0;

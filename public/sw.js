@@ -1,9 +1,15 @@
 /**
  * Template Used: https://gist.github.com/arnav-kr/0ad065605d2fe20967a6da383aef8b72
  */
+// SkipWaiting on message from the webpage
+self.addEventListener('message', function (event) {
+  if (event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
+});
 
 // TODO: Update the cacheName Everytime you want to update your cache
-const cacheName = "v1.0.0";
+const cacheName = "v2.0.0";
 const cacheKeepList = [cacheName] // Add Other names of cache that you don't want to delete
 
 
