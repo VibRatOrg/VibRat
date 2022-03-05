@@ -144,6 +144,7 @@ tapArea.addEventListener("pointerdown", e => {
   snapshots.push({
     start: performance.now() || Date.now(),
   });
+  navigator.vibrate(60000);
   console.log("Capturing...", performance.now() || Date.now());
 });
 tapArea.addEventListener("pointermove", e => {
@@ -155,6 +156,7 @@ tapArea.addEventListener("pointermove", e => {
   if (isRecording) {
     if (isPsCursorVisible) {
       if (e.clientX - tapArea.offsetLeft - 23 < 0 || e.clientX - tapArea.offsetLeft + 8 > tapArea.offsetWidth || e.clientY - tapArea.offsetTop - 23 < 0 || e.clientY - tapArea.offsetTop + 8 > tapArea.offsetHeight) {
+        navigator.vibrate(0);
         pseudoCursor.classList.add("hidden");
         isPsCursorVisible = false;
         snapshots[currentIndex].end = performance.now() || Date.now();
@@ -186,6 +188,7 @@ tapArea.addEventListener("pointerup", e => {
     let x = Math.max(e.clientX - tapArea.offsetLeft - 23, 0);
     let y = Math.max(e.clientY - tapArea.offsetTop - 23, 0);
     try {
+      navigator.vibrate(0);
       snapshots[currentIndex].end = performance.now() || Date.now();
       snapshots[currentIndex].duration = snapshots[currentIndex].end - snapshots[currentIndex].start;
       let ts = document.createElement("div");
