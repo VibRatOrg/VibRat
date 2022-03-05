@@ -25,7 +25,7 @@ let Database = {
   recordings: [],
 }, isLS;
 let isRecording = false, isPsCursorVisible = false, recordingDuration = 60000, isStopped = true;
-let data = [], snapshots = [], currentIndex = 0, timeElapsed = 0, startTime = 0, timeLoop = null;
+let data = [], snapshots = [], currentIndex = 0, timeElapsed = 0, startTime = 0, timeLoop = null, playInterval = null;
 let TBM = new Tabs(["loader", "main", "record"], "loader");
 window.TBM = TBM;
 let VibRat = new Vibr();
@@ -189,7 +189,7 @@ tapArea.addEventListener("pointerup", e => {
       snapshots[currentIndex].end = performance.now() || Date.now();
       snapshots[currentIndex].duration = snapshots[currentIndex].end - snapshots[currentIndex].start;
       let ts = document.createElement("div");
-      ts.className = "bar-timestamp top-0 absolute h-full bg-blue-800 dark:to-blue-500 rounded-md opacity-70";
+      ts.className = "bar-timestamp top-0 absolute h-full bg-blue-800 dark:bg-blue-500 rounded-md opacity-70";
       ts.style.left = (snapshots[currentIndex].start - startTime) / 60000 * 100 + "%";
       ts.style.width = snapshots[currentIndex].duration / 60000 * 100 + "%";
       seekBar.appendChild(ts);
@@ -571,19 +571,32 @@ function stopPlayingRecording() {
 function playRecording(data) {
   togglePlayerDialog(true);
   navigator.vibrate(0);
+  data.pop();
   let s = 0;
+  let playDuration = data.reduce((a, b) => parseFloat(a) + parseFloat(b));
+  let playTimeElapsed = 0;
   for (let x in data) {
     if (x % 2 === 0) {
       let ts = document.createElement("div");
       ts.className = "bar-timestamp top-0 absolute h-full bg-blue-800 dark:bg-blue-500 rounded-md opacity-70";
-      console.log(s, data[x])
-      ts.style.left = s / 60000 * 100 + "%";
-      ts.style.width = data[x] / 60000 * 100 + "%";
+      console.log(playDuration)
+      ts.style.left = s / playDuration * 100 + "%";
+      ts.style.width = data[x] / playDuration * 100 + "%";
       playerSeekBar.appendChild(ts);
     }
     s += data[x];
   }
   navigator.vibrate(data);
+  playInterval = setInterval(() => {
+    let progress = id("vibr-seek-progress");
+    progress.style.width = playTimeElapsed / playDuration * 100 + "%";
+    playTimeElapsed += 10;
+    if (playTimeElapsed > playDuration) {
+      clearInterval(playInterval);
+      stopPlayingRecording();
+      togglePlayerDialog(false);
+    }
+  }, 10);
 }
 
 let d = [406
