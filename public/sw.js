@@ -12,6 +12,9 @@ self.addEventListener('message', function (event) {
 const cacheName = "v1.0.1";
 const cacheKeepList = [cacheName] // Add Other names of cache that you don't want to delete
 
+// custom base64
+const catob = (data) => atob(data.replace(/\_/g, '+'));
+const cbtoa = (data) => btoa(data).replace(/\+/g, '_');
 
 // TODO: Add the default response URL
 // When the User is offline and the requested resource is not in the cache then this response will be returned. This needs to be in the cache
@@ -58,7 +61,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (event.request.method === 'POST' &&
-    url.pathname === '/import') {
+    url.pathname === '/play') {
     event.respondWith((async () => {
       const formData = await event.request.formData();
       const files = formData.get('files') || [];
@@ -66,14 +69,10 @@ self.addEventListener("fetch", (event) => {
         const file = files[0];
         const reader = new FileReader();
         reader.readAsArrayBuffer(file);
-        return new Response(reader.result, {
-          headers: {
-            'Content-Type': file.type,
-            'Content-Disposition': `attachment; filename="${file.name}"`
-          }
-        });
+        let data = reader.result;
+        let name = file.name;
+        return Response.redirect(`/?data=${btoa(data)}&name=${btoa(name)}`, 303);
       }
-      return Response.redirect(responseUrl, 303);
     })());
   }
   else {

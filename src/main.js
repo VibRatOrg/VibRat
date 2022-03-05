@@ -4,6 +4,8 @@ import Vibr from './vibr.js';
 import ServiceWorkerManager from './registerSw';
 
 const id = document.getElementById.bind(document);
+const catob = (data) => atob(data.replace(/\_/g, '+'));
+const cbtoa = (data) => btoa(data).replace(/\+/g, '_');
 
 let tapArea = id("tap-area");
 let tapAreaText = tapArea.querySelector("p");
@@ -52,6 +54,22 @@ if (isLS) {
 let swManager = new ServiceWorkerManager("/sw.js");
 
 swManager.init();
+
+addEventListener("load", () => {
+  if (window.location.search) {
+    let params = new URLSearchParams(window.location.search);
+    if (params.get("data")) {
+      try {
+        let pdata = decodeURIComponent(params.get("data"));
+        let shareData = VibRat.parse(catob(pdata));
+        playRecording(shareData.data, shareData.metadata.fileName);
+      }
+      catch (e) {
+        console.log(e);
+      }
+    }
+  }
+});
 
 let refreshing = false;
 
@@ -556,6 +574,7 @@ function saveData(name) {
 
 function togglePlayerDialog(bool = true) {
   // stopRecording();
+  console.log(playerDialog["_x_dataStack"])
   playerDialog["_x_dataStack"][0].open = bool;
   return bool;
 }
