@@ -68,10 +68,9 @@ self.addEventListener("fetch", (event) => {
       if (files.length > 0) {
         const file = files[0];
         const reader = new FileReader();
-        reader.readAsArrayBuffer(file);
+        reader.readAsText(file);
         let data = reader.result;
-        let name = file.name;
-        return Response.redirect(`/?data=${btoa(data)}&name=${btoa(name)}`, 303);
+        return Response.redirect(`/?data=${btoa(data)}`, 303);
       }
     })());
   }
