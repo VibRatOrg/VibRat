@@ -56,6 +56,7 @@ let swManager = new ServiceWorkerManager("/sw.js");
 swManager.init();
 
 addEventListener("load", () => {
+
   if (window.location.search) {
     let params = new URLSearchParams(window.location.search);
     if (params.get("data")) {
@@ -87,6 +88,29 @@ addEventListener("load", () => {
       })();
     });
   }
+
+  let deferredPrompt;
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    toggleInstallPrompt(true);
+    console.log("Prompted user to install");
+  });
+
+  id("install-fab").addEventListener('click', async () => {
+    toggleInstallPrompt(false);
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    console.log(`User response to the install prompt: ${outcome}`);
+    deferredPrompt = null;
+  });
+
+  window.addEventListener('appinstalled', () => {
+    toggleInstallPrompt(false);
+    deferredPrompt = null;
+    console.log('PWA was installed');
+  });
 });
 
 let refreshing = false;
@@ -603,8 +627,14 @@ function toggleInvalidFilePopup(bool = true) {
 }
 
 function toggleInstallPrompt(bool = true) {
-  id("install-popup")["_x_dataStack"][0].open = bool;
-  return bool;
+  if (bool) {
+    id("install-fab").classList.remove("hidden");
+  }
+  else {
+    id("install-fab").classList.add("hidden");
+  }
+
+  return !bool;
 }
 
 function stopPlayingRecording() {
