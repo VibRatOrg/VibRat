@@ -64,14 +64,9 @@ self.addEventListener("fetch", (event) => {
     url.pathname === '/play') {
     event.respondWith((async () => {
       const formData = await event.request.formData();
-      for(var pair of formData.entries()) {
-        console.log(pair[0], ', ', pair[1]);
-     }
-      console.log(formData);
-      const files = formData.get('files') || [];
       console.log(files);
-      if (files.length > 0) {
-        const file = files[0];
+      if (formData.has('vibr')) {
+        const file = formData.get('vibr');
         console.log(file);
         const reader = new FileReader();
         reader.readAsText(file);
