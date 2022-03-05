@@ -316,6 +316,68 @@ https://ogp.me/ns/website#">
       </div>
     </div>
   </div>
+  <div id="install-popup" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="save-recording" role="dialog"
+    aria-roledescription="Dialog" aria-modal="true" x-data="{ open: false }" @keydown.window.escape="open = false"
+    x-show="open" x-ref="dialog">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+
+      <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+        x-description="Background overlay, show/hide based on modal state."
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true">
+      </div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+      <div x-show="open" x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-description="Save Recording"
+        class="inline-block align-bottom bg-white dark:bg-gray-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full w-full">
+        <div class="bg-white dark:bg-gray-900 p-6">
+          <span class="block text-lg leading-6 font-medium text-gray-900 dark:text-white text-left">An Update
+            Available! 🎉</span>
+          <span class="block mt-2 text-gray-900 dark:text-white">Reload to install it!</span>
+          <div class="mt-4 p-0">
+            <button type="button" id="reload-btn"
+              class="save-btn inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-gray-900 sm:text-sm">Reload</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="invalid-file-popup" class="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="save-recording" role="dialog"
+    aria-roledescription="Dialog" aria-modal="true" x-data="{ open: false }" @keydown.window.escape="open = false"
+    x-show="open" x-ref="dialog">
+    <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+
+      <div x-show="open" x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+        x-description="Background overlay, show/hide based on modal state."
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true">
+      </div>
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+      <div x-show="open" x-transition:enter="ease-out duration-300"
+        x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+        x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" x-transition:leave="ease-in duration-200"
+        x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+        x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" x-description="Save Recording"
+        class="inline-block align-bottom bg-white dark:bg-gray-900 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full w-full">
+        <div class="bg-white dark:bg-gray-900 p-6">
+          <span class="block text-lg leading-6 font-medium text-gray-900 dark:text-white text-left">Oops! 🎉</span>
+          <span class="block mt-2 text-gray-900 dark:text-white">The Provided file is not valid!</span>
+          <div class="mt-4 p-0">
+            <button type="button" id="reload-btn"
+              class="save-btn inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:ring-offset-gray-900 sm:text-sm"
+              @click="open = false;">Okay!</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="templates" class="templates hidden">
     <div class="bar-timestamp top-0 absolute h-full bg-blue-800 dark:bg-blue-500 rounded-md opacity-70"></div>
     <div class="hidden mt-28"></div>

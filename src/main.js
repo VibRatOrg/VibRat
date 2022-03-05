@@ -59,15 +59,33 @@ addEventListener("load", () => {
   if (window.location.search) {
     let params = new URLSearchParams(window.location.search);
     if (params.get("data")) {
+      if (params.get("data") == "invalid") return toggleInvalidFilePopup(true);
       try {
         let pdata = decodeURIComponent(params.get("data"));
         let shareData = VibRat.parse(catob(pdata));
         playRecording(shareData.data, shareData.metadata.fileName);
       }
       catch (e) {
-        console.log(e);
+        toggleInvalidFilePopup(true);
       }
     }
+  }
+  if ('launchQueue' in window) {
+    launchQueue.setConsumer(launchParams => {
+      if (!launchParams.files.length) { return toggleInvalidFilePopup(true); }
+      (async () => {
+        const fileHandle = launchParams.files[0];
+        if (fileHandle.kind == "file" || fileHandle.endsWith(".vibr")) {
+          let file = await fileHandle.getFile();
+          let fContents = await file.text();
+          let data = VibRat.parse(fContents);
+          playRecording(data.data, data.metadata.fileName);
+        }
+        else {
+          toggleInvalidFilePopup(true);
+        }
+      })();
+    });
   }
 });
 
@@ -576,6 +594,16 @@ function togglePlayerDialog(bool = true) {
   // stopRecording();
   console.log(playerDialog["_x_dataStack"])
   playerDialog["_x_dataStack"][0].open = bool;
+  return bool;
+}
+
+function toggleInvalidFilePopup(bool = true) {
+  id("invalid-file-popup")["_x_dataStack"][0].open = bool;
+  return bool;
+}
+
+function toggleInstallPrompt(bool = true) {
+  id("install-popup")["_x_dataStack"][0].open = bool;
   return bool;
 }
 

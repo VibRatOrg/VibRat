@@ -68,11 +68,12 @@ self.addEventListener("fetch", (event) => {
       if (formData.has('vibr')) {
         const file = formData.get('vibr');
         console.log(file);
-        const reader = new FileReader();
-        reader.readAsText(file);
-        let data = reader.result;
+        let data = await file.text();
         console.log(data);
-        return Response.redirect(`/?data=${btoa(data)}`, 303);
+        return Response.redirect(`/?data=${cbtoa(data)}`, 303);
+      }
+      else {
+        return Response.redirect(`/?data=invalid`, 303);
       }
     })());
   }

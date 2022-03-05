@@ -152,7 +152,7 @@
   },
   "file_handlers": [
     {
-      "action": "/play/",
+      "action": "/",
       "name": "VibRat VIBR File",
       "accept": {
         "application/vibr": [
