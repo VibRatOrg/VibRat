@@ -64,12 +64,16 @@ self.addEventListener("fetch", (event) => {
     url.pathname === '/play') {
     event.respondWith((async () => {
       const formData = await event.request.formData();
+      console.log(formData);
       const files = formData.get('files') || [];
+      console.log(files);
       if (files.length > 0) {
         const file = files[0];
+        console.log(file);
         const reader = new FileReader();
         reader.readAsText(file);
         let data = reader.result;
+        console.log(data);
         return Response.redirect(`/?data=${btoa(data)}`, 303);
       }
     })());
