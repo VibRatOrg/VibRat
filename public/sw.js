@@ -64,7 +64,7 @@ self.addEventListener("fetch", (event) => {
     url.pathname === '/play') {
     event.respondWith((async () => {
       const formData = await event.request.formData();
-      console.log(formData.getAll());
+      console.log(formData.entries());
       console.log(formData);
       const files = formData.get('files') || [];
       console.log(files);
