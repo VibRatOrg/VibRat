@@ -9,7 +9,7 @@ self.addEventListener('message', function (event) {
 });
 
 // TODO: Update the cacheName Everytime you want to update your cache
-const cacheName = "v1.0.6";
+const cacheName = "v1.0.7";
 const cacheKeepList = [cacheName] // Add Other names of cache that you don't want to delete
 
 // custom base64
@@ -61,7 +61,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (event.request.method === 'POST' &&
-    url.pathname === '/') {
+    url.pathname === '/play') {
     event.respondWith((async () => {
       const formData = await event.request.formData();
       if (formData.has('vibr')) {
