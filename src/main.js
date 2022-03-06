@@ -73,6 +73,7 @@ else {
         }
         catch (e) {
           toggleInvalidFilePopup(true);
+          stopPlayingRecording();
         }
       }
     }
