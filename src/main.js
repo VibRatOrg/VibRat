@@ -6,7 +6,7 @@ import ServiceWorkerManager from './registerSw';
 const id = document.getElementById.bind(document);
 const catob = (data) => atob(data.replace(/\_/g, '+'));
 const cbtoa = (data) => btoa(data).replace(/\+/g, '_');
-const vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate || null;
+const vibrate = navigator.vibrate.bind(navigator) || navigator.webkitVibrate.bind(navigator) || navigator.mozVibrate.bind(navigator) || navigator.msVibrate.bind(navigator) || null;
 
 if (!vibrate) alert("Vibrations Are not Supported in your browser Sorry!")
 else {
