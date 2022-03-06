@@ -61,40 +61,6 @@ else {
   swManager.init();
 
   addEventListener("load", () => {
-
-    if (window.location.search) {
-      let params = new URLSearchParams(window.location.search);
-      if (params.get("data")) {
-        if (params.get("data") == "invalid") return toggleInvalidFilePopup(true);
-        try {
-          let pdata = decodeURIComponent(params.get("data"));
-          let shareData = VibRat.parse(catob(pdata));
-          playRecording(shareData.data, shareData.metadata.fileName);
-        }
-        catch (e) {
-          toggleInvalidFilePopup(true);
-          stopPlayingRecording();
-        }
-      }
-    }
-    if ('launchQueue' in window) {
-      launchQueue.setConsumer(launchParams => {
-        if (!launchParams.files.length) { return toggleInvalidFilePopup(true); }
-        (async () => {
-          const fileHandle = launchParams.files[0];
-          if (fileHandle.kind == "file" || fileHandle.endsWith(".vibr")) {
-            let file = await fileHandle.getFile();
-            let fContents = await file.text();
-            let data = VibRat.parse(fContents);
-            playRecording(data.data, data.metadata.fileName);
-          }
-          else {
-            toggleInvalidFilePopup(true);
-          }
-        })();
-      });
-    }
-
     let deferredPrompt;
 
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -134,6 +100,45 @@ else {
   window.addEventListener("updatefound", () => {
     console.log("New Update Available!");
   });
+
+  function loadfunc() {
+    if (window.location.search) {
+      let params = new URLSearchParams(window.location.search);
+      if (params.get("data")) {
+        if (params.get("data") == "invalid") return toggleInvalidFilePopup(true);
+        try {
+          let pdata = decodeURIComponent(params.get("data"));
+          let shareData = VibRat.parse(catob(pdata));
+          toggleDoPlayDialog(true).then(d => {
+            if (d) playRecording(shareData.data, shareData.metadata.fileName);
+          });
+        }
+        catch (e) {
+          toggleInvalidFilePopup(true);
+          stopPlayingRecording();
+        }
+      }
+    }
+    if ('launchQueue' in window) {
+      launchQueue.setConsumer(launchParams => {
+        if (!launchParams.files.length) { return toggleInvalidFilePopup(true); }
+        (async () => {
+          const fileHandle = launchParams.files[0];
+          if (fileHandle.kind == "file" || fileHandle.endsWith(".vibr")) {
+            let file = await fileHandle.getFile();
+            let fContents = await file.text();
+            let data = VibRat.parse(fContents);
+            toggleDoPlayDialog(true).then(d => {
+              if (d) playRecording(data.data, data.metadata.fileName);
+            });
+          }
+          else {
+            toggleInvalidFilePopup(true);
+          }
+        })();
+      });
+    }
+  }
 
   document.addEventListener("click", (e) => {
     var t = document.querySelectorAll(".vibr-action-dropdown");
@@ -640,6 +645,18 @@ else {
     return bool;
   }
 
+  async function toggleDoPlayDialog(bool = true) {
+    id("do-play-dialog")["_x_dataStack"][0].open = bool;
+    return new Promise(resolve => {
+      id("do-play-dialog").querySelector(".play-btn").addEventListener("click", () => {
+        resolve(true);
+      });
+      id("do-play-dialog").querySelector(".cancel-btn").addEventListener("click", () => {
+        resolve(false);
+      });
+    });
+  }
+
   function Exists(name) {
     return Database.recordings.filter(r => r.name == name).length == 0;
   }
@@ -768,11 +785,13 @@ else {
   if (loadTime > 2000) {
     window.__IS_LOADED = true;
     TBM.open("main");
+    loadfunc();
   }
   else {
     setTimeout(() => {
       window.__IS_LOADED = true;
       TBM.open("main");
+      loadfunc();
     }, 2000 - loadTime);
   }
 }

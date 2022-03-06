@@ -61,7 +61,7 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (event.request.method === 'POST' &&
-    url.pathname === '/play') {
+    url.pathname === '/') {
     event.respondWith((async () => {
       const formData = await event.request.formData();
       if (formData.has('vibr')) {
