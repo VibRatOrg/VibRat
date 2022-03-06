@@ -6,403 +6,441 @@ import ServiceWorkerManager from './registerSw';
 const id = document.getElementById.bind(document);
 const catob = (data) => atob(data.replace(/\_/g, '+'));
 const cbtoa = (data) => btoa(data).replace(/\+/g, '_');
+const vibrate = navigator.vibrate || navigator.webkitVibrate || navigator.mozVibrate || navigator.msVibrate || null;
 
-let tapArea = id("tap-area");
-let tapAreaText = tapArea.querySelector("p");
-let pseudoCursor = id("pseudo-cursor");
-let recordingsContainer = id("recordings-container")
-let seekBar = id("seekbar")
-let stopBtn = id("stop/record");
-let cancelBtn = id("cancel-recording");
-let saveBtn = id("save-recording");
-let playBtn = id("play-recording");
-let playStopBtn = id("play/stop");
-let saveDialog = id("save-dialog");
-let playerDialog = id("vibr-player");
-let playerSeekBar = id("vibr-seekbar");
-let importInput = id("import-input");
-let saveOkBtn = saveDialog.querySelector(".save-btn");
-let saveCancelBtn = saveDialog.querySelector(".cancel-btn");
-let Database = {
-  recordings: [],
-}, isLS;
-let isRecording = false, isPsCursorVisible = false, recordingDuration = 60000, isStopped = true;
-let data = [], snapshots = [], currentIndex = 0, timeElapsed = 0, startTime = 0, timeLoop = null, playInterval = null;
-let TBM = new Tabs(["loader", "main", "record"], "loader");
-window.TBM = TBM;
-let VibRat = new Vibr();
+if (!vibrate) alert("Vibrations Are not Supported in your browser Sorry!")
+else {
+  let tapArea = id("tap-area");
+  let tapAreaText = tapArea.querySelector("p");
+  let pseudoCursor = id("pseudo-cursor");
+  let recordingsContainer = id("recordings-container")
+  let seekBar = id("seekbar")
+  let stopBtn = id("stop/record");
+  let cancelBtn = id("cancel-recording");
+  let saveBtn = id("save-recording");
+  let playBtn = id("play-recording");
+  let playStopBtn = id("play/stop");
+  let saveDialog = id("save-dialog");
+  let playerDialog = id("vibr-player");
+  let playerSeekBar = id("vibr-seekbar");
+  let importInput = id("import-input");
+  let saveOkBtn = saveDialog.querySelector(".save-btn");
+  let saveCancelBtn = saveDialog.querySelector(".cancel-btn");
+  let renameOkBtn = id("rename-dialog").querySelector(".rename-btn");
+  let renameCancelBtn = id("rename-dialog").querySelector(".cancel-btn");
+  let Database = {
+    recordings: [],
+  }, isLS;
+  let isRecording = false, isPsCursorVisible = false, recordingDuration = 60000, isStopped = true;
+  let data = [], snapshots = [], currentIndex = 0, timeElapsed = 0, startTime = 0, timeLoop = null, playInterval = null, currentRenameIndex, currentRenameName, currentRenameData;
+  let TBM = new Tabs(["loader", "main", "record"], "loader");
+  window.TBM = TBM;
+  let VibRat = new Vibr();
 
-try {
-  localStorage.setItem("Vibrat_@%#!$#@%&$#^#*^%#", "TEST");
-  localStorage.getItem("Vibrat_@%#!$#@%&$#^#*^%#");
-  localStorage.removeItem("Vibrat_@%#!$#@%&$#^#*^%#");
-  isLS = true;
-}
-catch (e) {
-  isLS = false;
-}
-
-if (isLS) {
-  if (localStorage.getItem("VibratDatabase") !== null) {
-    Database = JSON.parse(localStorage.getItem("VibratDatabase"));
+  try {
+    localStorage.setItem("Vibrat_@%#!$#@%&$#^#*^%#", "TEST");
+    localStorage.getItem("Vibrat_@%#!$#@%&$#^#*^%#");
+    localStorage.removeItem("Vibrat_@%#!$#@%&$#^#*^%#");
+    isLS = true;
   }
-  else {
-    localStorage.setItem("VibratDatabase", JSON.stringify(Database));
+  catch (e) {
+    isLS = false;
   }
-}
 
-let swManager = new ServiceWorkerManager("/sw.js");
-
-swManager.init();
-
-addEventListener("load", () => {
-
-  if (window.location.search) {
-    let params = new URLSearchParams(window.location.search);
-    if (params.get("data")) {
-      if (params.get("data") == "invalid") return toggleInvalidFilePopup(true);
-      try {
-        let pdata = decodeURIComponent(params.get("data"));
-        let shareData = VibRat.parse(catob(pdata));
-        playRecording(shareData.data, shareData.metadata.fileName);
-      }
-      catch (e) {
-        toggleInvalidFilePopup(true);
-      }
+  if (isLS) {
+    if (localStorage.getItem("VibratDatabase") !== null) {
+      Database = JSON.parse(localStorage.getItem("VibratDatabase"));
+    }
+    else {
+      localStorage.setItem("VibratDatabase", JSON.stringify(Database));
     }
   }
-  if ('launchQueue' in window) {
-    launchQueue.setConsumer(launchParams => {
-      if (!launchParams.files.length) { return toggleInvalidFilePopup(true); }
-      (async () => {
-        const fileHandle = launchParams.files[0];
-        if (fileHandle.kind == "file" || fileHandle.endsWith(".vibr")) {
-          let file = await fileHandle.getFile();
-          let fContents = await file.text();
-          let data = VibRat.parse(fContents);
-          playRecording(data.data, data.metadata.fileName);
+
+  let swManager = new ServiceWorkerManager("/sw.js");
+
+  swManager.init();
+
+  addEventListener("load", () => {
+
+    if (window.location.search) {
+      let params = new URLSearchParams(window.location.search);
+      if (params.get("data")) {
+        if (params.get("data") == "invalid") return toggleInvalidFilePopup(true);
+        try {
+          let pdata = decodeURIComponent(params.get("data"));
+          let shareData = VibRat.parse(catob(pdata));
+          playRecording(shareData.data, shareData.metadata.fileName);
         }
-        else {
+        catch (e) {
           toggleInvalidFilePopup(true);
         }
-      })();
+      }
+    }
+    if ('launchQueue' in window) {
+      launchQueue.setConsumer(launchParams => {
+        if (!launchParams.files.length) { return toggleInvalidFilePopup(true); }
+        (async () => {
+          const fileHandle = launchParams.files[0];
+          if (fileHandle.kind == "file" || fileHandle.endsWith(".vibr")) {
+            let file = await fileHandle.getFile();
+            let fContents = await file.text();
+            let data = VibRat.parse(fContents);
+            playRecording(data.data, data.metadata.fileName);
+          }
+          else {
+            toggleInvalidFilePopup(true);
+          }
+        })();
+      });
+    }
+
+    let deferredPrompt;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      toggleInstallPrompt(true);
+      console.log("Prompted user to install");
     });
-  }
 
-  let deferredPrompt;
+    id("install-fab").addEventListener('click', async () => {
+      toggleInstallPrompt(false);
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log(`User response to the install prompt: ${outcome}`);
+      deferredPrompt = null;
+    });
 
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    toggleInstallPrompt(true);
-    console.log("Prompted user to install");
+    window.addEventListener('appinstalled', () => {
+      toggleInstallPrompt(false);
+      deferredPrompt = null;
+      console.log('PWA was installed');
+    });
   });
 
-  id("install-fab").addEventListener('click', async () => {
-    toggleInstallPrompt(false);
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`User response to the install prompt: ${outcome}`);
-    deferredPrompt = null;
+  let refreshing = false;
+
+  id("reload-btn").addEventListener("click", () => {
+    window.location.reload();
   });
 
-  window.addEventListener('appinstalled', () => {
-    toggleInstallPrompt(false);
-    deferredPrompt = null;
-    console.log('PWA was installed');
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    id("update-popup")["_x_dataStack"][0].open = true;
+    refreshing = true;
   });
-});
 
-let refreshing = false;
+  window.addEventListener("updatefound", () => {
+    console.log("New Update Available!");
+  });
 
-id("reload-btn").addEventListener("click", () => {
-  window.location.reload();
-});
+  document.addEventListener("click", (e) => {
+    var t = document.querySelectorAll(".vibr-action-dropdown");
+    if (!e.target.closest(".vibr-action-dropdown")) {
+      t.forEach(i => {
+        i["_x_dataStack"][0].open = false;
+      });
+    }
+  });
 
-navigator.serviceWorker.addEventListener('controllerchange', () => {
-  if (refreshing) return;
-  id("update-popup")["_x_dataStack"][0].open = true;
-  refreshing = true;
-});
-
-window.addEventListener("updatefound", () => {
-  console.log("New Update Available!");
-});
-
-// TBM.open("main");
-// let x = 0;
-
-// do {
-//   recordingsContainer.appendChild(rCard())
-//   x++
-// } while (x < 15)
-
-// register service worker
-// if ('serviceWorker' in navigator) {
-//   navigator.serviceWorker.register('/sw.js').then(function (registration) {
-//     console.log('ServiceWorker registration successful with scope: ', registration.scope);
-//   }).catch(function (err) {
-//     console.log('ServiceWorker registration failed: ', err);
-//   });
-// }
-
-document.addEventListener("click", (e) => {
-  var t = document.querySelectorAll(".vibr-action-dropdown");
-  if (!e.target.closest(".vibr-action-dropdown")) {
+  window.closeAllDropdowns = (e) => {
+    var t = document.querySelectorAll(".vibr-action-dropdown");
     t.forEach(i => {
-      i["_x_dataStack"][0].open = false;
+      if (!i.isEqualNode(e.target.closest(".vibr-action-dropdown"))) {
+        i["_x_dataStack"][0].open = false;
+      }
     });
   }
-});
 
-window.closeAllDropdowns = (e) => {
-  var t = document.querySelectorAll(".vibr-action-dropdown");
-  t.forEach(i => {
-    if (!i.isEqualNode(e.target.closest(".vibr-action-dropdown"))) {
-      i["_x_dataStack"][0].open = false;
+  importInput.addEventListener("change", (e) => {
+    let file = e.target.files[0];
+    let name = file.name.replace(".vibr", "");
+    let i = 1;
+    let suffix = "";
+    while (!Exists(name + suffix)) {
+      suffix = ` (${i})`;
+      i++;
     }
-  });
-}
-
-importInput.addEventListener("change", (e) => {
-  let file = e.target.files[0];
-  let name = file.name.replace(".vibr", "");
-  let i = 1;
-  let suffix = "";
-  while (!Exists(name + suffix)) {
-    suffix = ` (${i})`;
-    i++;
-  }
-  name += suffix;
-  file.text().then(r => {
-    let d = VibRat.parse(r);
-    Database.recordings.push({
-      name,
-      data: d.data,
+    name += suffix;
+    file.text().then(r => {
+      let d = VibRat.parse(r);
+      Database.recordings.push({
+        name,
+        data: d.data,
+      });
+      syncDatabase();
+      paintRecordings();
     });
-    syncDatabase();
-    paintRecordings();
   });
-});
 
-tapArea.addEventListener("pointerdown", e => {
-  if (isStopped) {
-    pseudoCursor.classList.add("hidden");
-    isPsCursorVisible = false;
-    return;
-  }
-  // if (!isRecording) {
-  //   startRecording();
-  // }
-  pseudoCursor.classList.remove("hidden");
-  let x = Math.max(e.clientX - tapArea.offsetLeft - 23, 0);
-  let y = Math.max(e.clientY - tapArea.offsetTop - 23, 0);
-  pseudoCursor.style.left = x + "px";
-  pseudoCursor.style.top = y + "px";
-  isPsCursorVisible = true;
-  tapAreaText.classList.add("hidden");
-  snapshots.push({
-    start: performance.now() || Date.now(),
-  });
-  navigator.vibrate(60000);
-  console.log("Capturing...", performance.now() || Date.now());
-});
-tapArea.addEventListener("pointermove", e => {
-  if (isStopped) {
-    pseudoCursor.classList.add("hidden");
-    isPsCursorVisible = false;
-    return;
-  }
-  if (isRecording) {
-    if (isPsCursorVisible) {
-      if (e.clientX - tapArea.offsetLeft - 23 < 0 || e.clientX - tapArea.offsetLeft + 8 > tapArea.offsetWidth || e.clientY - tapArea.offsetTop - 23 < 0 || e.clientY - tapArea.offsetTop + 8 > tapArea.offsetHeight) {
-        navigator.vibrate(0);
-        pseudoCursor.classList.add("hidden");
-        isPsCursorVisible = false;
-        snapshots[currentIndex].end = performance.now() || Date.now();
-        snapshots[currentIndex].duration = snapshots[currentIndex].end - snapshots[currentIndex].start;
-        currentIndex += 1;
-      }
-      else {
-        pseudoCursor.classList.remove("hidden");
-        let x = Math.max(e.clientX - tapArea.offsetLeft - 23, 0);
-        let y = Math.max(e.clientY - tapArea.offsetTop - 23, 0);
-        pseudoCursor.style.left = x + "px";
-        pseudoCursor.style.top = y + "px";
-        isPsCursorVisible = true;
-      }
-    }
-  }
-});
-tapArea.addEventListener("pointerup", e => {
-  if (isStopped) {
-    pseudoCursor.classList.add("hidden");
-    isPsCursorVisible = false;
-    return;
-  }
-  if (isRecording) {
-    if (isPsCursorVisible) {
+  tapArea.addEventListener("pointerdown", e => {
+    if (isStopped) {
       pseudoCursor.classList.add("hidden");
       isPsCursorVisible = false;
+      return;
     }
+    // if (!isRecording) {
+    //   startRecording();
+    // }
+    pseudoCursor.classList.remove("hidden");
     let x = Math.max(e.clientX - tapArea.offsetLeft - 23, 0);
     let y = Math.max(e.clientY - tapArea.offsetTop - 23, 0);
-    try {
-      navigator.vibrate(0);
-      snapshots[currentIndex].end = performance.now() || Date.now();
-      snapshots[currentIndex].duration = snapshots[currentIndex].end - snapshots[currentIndex].start;
-      let ts = document.createElement("div");
-      ts.className = "bar-timestamp top-0 absolute h-full bg-blue-800 dark:bg-blue-500 rounded-md opacity-70";
-      ts.style.left = (snapshots[currentIndex].start - startTime) / 60000 * 100 + "%";
-      ts.style.width = snapshots[currentIndex].duration / 60000 * 100 + "%";
-      seekBar.appendChild(ts);
-      currentIndex += 1;
+    pseudoCursor.style.left = x + "px";
+    pseudoCursor.style.top = y + "px";
+    isPsCursorVisible = true;
+    tapAreaText.classList.add("hidden");
+    snapshots.push({
+      start: performance.now() || Date.now(),
+    });
+    vibrate(60000);
+  });
+  tapArea.addEventListener("pointermove", e => {
+    if (isStopped) {
+      pseudoCursor.classList.add("hidden");
+      isPsCursorVisible = false;
+      return;
     }
-    catch (e) {
-      console.log("Error:", e);
+    if (isRecording) {
+      if (isPsCursorVisible) {
+        if (e.clientX - tapArea.offsetLeft - 23 < 0 || e.clientX - tapArea.offsetLeft + 8 > tapArea.offsetWidth || e.clientY - tapArea.offsetTop - 23 < 0 || e.clientY - tapArea.offsetTop + 8 > tapArea.offsetHeight) {
+          vibrate(0);
+          pseudoCursor.classList.add("hidden");
+          isPsCursorVisible = false;
+          snapshots[currentIndex].end = performance.now() || Date.now();
+          snapshots[currentIndex].duration = snapshots[currentIndex].end - snapshots[currentIndex].start;
+          currentIndex += 1;
+        }
+        else {
+          pseudoCursor.classList.remove("hidden");
+          let x = Math.max(e.clientX - tapArea.offsetLeft - 23, 0);
+          let y = Math.max(e.clientY - tapArea.offsetTop - 23, 0);
+          pseudoCursor.style.left = x + "px";
+          pseudoCursor.style.top = y + "px";
+          isPsCursorVisible = true;
+        }
+      }
     }
-  }
-});
+  });
+  tapArea.addEventListener("pointerup", e => {
+    if (isStopped) {
+      pseudoCursor.classList.add("hidden");
+      isPsCursorVisible = false;
+      return;
+    }
+    if (isRecording) {
+      if (isPsCursorVisible) {
+        pseudoCursor.classList.add("hidden");
+        isPsCursorVisible = false;
+      }
+      let x = Math.max(e.clientX - tapArea.offsetLeft - 23, 0);
+      let y = Math.max(e.clientY - tapArea.offsetTop - 23, 0);
+      try {
+        vibrate(0);
+        snapshots[currentIndex].end = performance.now() || Date.now();
+        snapshots[currentIndex].duration = snapshots[currentIndex].end - snapshots[currentIndex].start;
+        let ts = document.createElement("div");
+        ts.className = "bar-timestamp top-0 absolute h-full bg-blue-800 dark:bg-blue-500 rounded-md opacity-70";
+        ts.style.left = (snapshots[currentIndex].start - startTime) / 60000 * 100 + "%";
+        ts.style.width = snapshots[currentIndex].duration / 60000 * 100 + "%";
+        seekBar.appendChild(ts);
+        currentIndex += 1;
+      }
+      catch (e) {
+      }
+    }
+  });
 
-stopBtn.addEventListener("click", () => {
-  if (stopBtn.dataset.action === "stop") {
-    stopRecording();
-  }
-  else {
-    resetRecording();
-    startRecording();
-  }
-});
+  stopBtn.addEventListener("click", () => {
+    if (stopBtn.dataset.action === "stop") {
+      stopRecording();
+    }
+    else {
+      resetRecording();
+      startRecording();
+    }
+  });
 
-playBtn.addEventListener("click", () => {
-  if (isStopped && snapshots.length > 0) {
-    playRecording(getData(snapshots));
-  }
-});
+  playBtn.addEventListener("click", () => {
+    if (isStopped && snapshots.length > 0) {
+      playRecording(getData(snapshots));
+    }
+  });
 
-cancelBtn.addEventListener("click", () => {
-  console.log("Cancelling...");
-  cancelRecording();
-});
+  cancelBtn.addEventListener("click", () => {
+    cancelRecording();
+  });
 
-id("recording-name").addEventListener("input", e => {
-  if (e.target.value.length <= 0) {
-    e.target.classList.add("border-red-700");
-    e.target.classList.add("bg-red-50");
-  }
-  else {
-    e.target.classList.remove("border-red-700");
-    e.target.classList.remove("bg-red-50");
-  }
-})
+  id("recording-name").addEventListener("input", e => {
+    if (e.target.value.length <= 0) {
+      e.target.classList.add("border-red-700");
+      e.target.classList.add("bg-red-50");
+    }
+    else {
+      e.target.classList.remove("border-red-700");
+      e.target.classList.remove("bg-red-50");
+    }
+  })
 
-saveOkBtn.addEventListener("click", () => {
-  let name = id("recording-name");
-  if (name.value.length <= 0) {
+  saveOkBtn.addEventListener("click", () => {
+    let name = id("recording-name");
     if (name.value.length <= 0) {
       name.classList.add("border-red-700");
       name.classList.add("bg-red-50");
+      return;
     }
     else {
       name.classList.remove("border-red-700");
       name.classList.remove("bg-red-50");
     }
-    return;
-  }
-  saveData(name.value);
-  name.value = "";
-  name.classList.remove("border-red-700");
-  name.classList.remove("bg-red-50");
-  toggleSaveDialog(false);
-});
-saveCancelBtn.addEventListener("click", () => {
-  let name = id("recording-name");
-  name.value = "";
-  name.classList.remove("border-red-700");
-  name.classList.remove("bg-red-50");
-  toggleSaveDialog(false);
-});
+    saveData(name.value);
+    toggleSaveDialog(false);
+    name.value = "";
+    name.classList.remove("border-red-700");
+    name.classList.remove("bg-red-50");
+  });
+  saveCancelBtn.addEventListener("click", () => {
+    let name = id("recording-name");
+    toggleSaveDialog(false);
+    name.value = "";
+    name.classList.remove("border-red-700");
+    name.classList.remove("bg-red-50");
+  });
 
-saveBtn.addEventListener("click", () => {
-  toggleSaveDialog(true);
-})
+  renameOkBtn.addEventListener("click", () => {
+    let name = id("rename-name");
+    if (name.value.length <= 0) {
+      name.classList.add("border-red-700");
+      name.classList.add("bg-red-50");
+      return;
+    }
+    else {
+      name.classList.remove("border-red-700");
+      name.classList.remove("bg-red-50");
+    }
 
-playStopBtn.addEventListener("click", () => {
-  if (playStopBtn.dataset.action === "play") {
-    playRecording();
-  }
-  else {
-    stopPlayingRecording();
-  }
-});
-id("fab").addEventListener("click", startNewRecording);
+    let dataset = Database.recordings;
+    dataset.reverse();
+    if (currentRenameIndex !== null) {
+      if (dataset[currentRenameIndex]) {
+        let item = dataset[currentRenameIndex];
+        dataset = dataset.filter((r, i) => r.name !== item.name && i !== currentRenameIndex);
+        item.name = name.value;
+        dataset.reverse();
+        Database.recordings = dataset;
+        Database.recordings.push(item);
+        currentRenameData = null;
+        currentRenameIndex = null;
+        currentRenameName = null;
+        syncDatabase();
+        paintRecordings();
+      }
+    }
+    toggleRenameDialog(false);
+    name.value = "";
+    name.classList.remove("border-red-700");
+    name.classList.remove("bg-red-50");
+  });
+
+  renameCancelBtn.addEventListener("click", () => {
+    let name = id("rename-name");
+    toggleRenameDialog(false);
+    name.value = "";
+    name.classList.remove("border-red-700");
+    name.classList.remove("bg-red-50");
+  });
 
 
-function paintRecordings() {
-  recordingsContainer.innerHTML = "";
-  let dcopy = [...Database.recordings];
-  dcopy.reverse()
-  if (dcopy.length == 0) {
-    recordingsContainer.innerHTML = `
+  saveBtn.addEventListener("click", () => {
+    toggleSaveDialog(true);
+  })
+
+  playStopBtn.addEventListener("click", () => {
+    if (playStopBtn.dataset.action === "play") {
+      playRecording();
+    }
+    else {
+      stopPlayingRecording();
+    }
+  });
+  id("fab").addEventListener("click", startNewRecording);
+
+
+  function paintRecordings() {
+    recordingsContainer.innerHTML = "";
+    let dcopy = [...Database.recordings];
+    dcopy.reverse()
+    if (dcopy.length == 0) {
+      recordingsContainer.innerHTML = `
     <div class="absolute left-0 top-0 w-full h-full mt-28 flex items-center justify-center">
       <p class="block text-gray-600 dark:text-gray-400 text-lg">No Recordings! Create One</p>
     </div>`;
+    }
+    dcopy.forEach((r, i) => {
+      recordingsContainer.appendChild(rCard(r.name, r.data, i))
+    });
   }
-  dcopy.forEach((r, i) => {
-    recordingsContainer.appendChild(rCard(r.name, r.data, i))
-  });
-}
 
-paintRecordings();
+  paintRecordings();
 
-function startNewRecording() {
-  resetRecording();
-  TBM.open("record");
-  startRecording();
-  tapAreaText.classList.remove("hidden");
-}
+  function startNewRecording() {
+    resetRecording();
+    TBM.open("record");
+    startRecording();
+    tapAreaText.classList.remove("hidden");
+  }
 
-function deleteRecording(el) {
-  let name = el.closest(".vibr-card").dataset.name;
-  Database.recordings = Database.recordings.filter(r => r.name !== name);
-  syncDatabase();
-  el.closest(".vibr-card").remove();
-  if (Database.recordings.length == 0) {
-    recordingsContainer.innerHTML = `
+  function deleteRecording(el) {
+    let name = el.closest(".vibr-card").dataset.name;
+    Database.recordings = Database.recordings.filter(r => r.name !== name);
+    syncDatabase();
+    el.closest(".vibr-card").remove();
+    if (Database.recordings.length == 0) {
+      recordingsContainer.innerHTML = `
     <div class="absolute left-0 top-0 w-full h-full mt-28 flex items-center justify-center">
       <p class="block text-gray-500 dark:text-gray-600 text-lg">No Recordings! Create One</p>
     </div>`;
-  }
-}
-
-
-function downloadRecording(el) {
-  let parent = el.closest(".vibr-card");
-  let pdata = JSON.parse(parent.dataset.data);
-  let duration = 0;
-  if (pdata.length == 0) { }
-  else if (pdata.length == 1) { duration = pdata[0]; }
-  else if (pdata.length == 2) { duration = pdata[0] + pdata[1]; }
-  else { duration = pdata.reduce((a, b) => a + b) }
-  VibRat.downloadFile(VibRat.create({
-    data: pdata, metadata: {
-      fileName: parent.dataset.name,
-      duration,
     }
-  }, true));
-}
+  }
 
-function playCardRecording(el) {
-  let parent = el.closest(".vibr-card");
-  let pdata = JSON.parse(parent.dataset.data);
-  playRecording(pdata, parent.dataset.name);
-}
-window.deleteRecording = deleteRecording;
-window.downloadRecording = downloadRecording;
-window.playCardRecording = playCardRecording;
+  function renameRecording(el) {
+    let parent = el.closest(".vibr-card");
+    let pdata = JSON.parse(parent.dataset.data);
+    let pname = parent.dataset.name;
+    let pindex = parent.dataset.index;
+    currentRenameIndex = pindex;
+    currentRenameName = pname;
+    currentRenameData = pdata;
+    toggleRenameDialog(true);
+  }
 
-function rCard(name = "Untitled", data = [], index = 0) {
-  let temp = `<div data-name="${name}" data-index="${index}" data-data="${JSON.stringify(data)}"
+  function downloadRecording(el) {
+    let parent = el.closest(".vibr-card");
+    let pdata = JSON.parse(parent.dataset.data);
+    let duration = 0;
+    if (pdata.length == 0) { }
+    else if (pdata.length == 1) { duration = pdata[0]; }
+    else if (pdata.length == 2) { duration = pdata[0] + pdata[1]; }
+    else { duration = pdata.reduce((a, b) => a + b) }
+    VibRat.downloadFile(VibRat.create({
+      data: pdata, metadata: {
+        fileName: parent.dataset.name,
+        duration,
+      }
+    }, true));
+  }
+
+  function playCardRecording(el) {
+    let parent = el.closest(".vibr-card");
+    let pdata = JSON.parse(parent.dataset.data);
+    playRecording(pdata, parent.dataset.name);
+  }
+  window.deleteRecording = deleteRecording;
+  window.renameRecording = renameRecording;
+  window.downloadRecording = downloadRecording;
+  window.playCardRecording = playCardRecording;
+
+  function rCard(name = "Untitled", data = [], index = 0) {
+    let temp = `<div data-name="${name}" data-index="${index}" data-data="${JSON.stringify(data)}"
   class="vibr-card py-8 px-4 max-w-full flex items-center justify-between shadow-md rounded-md bg-slate-100 dark:bg-slate-800">
   <div class="vibr-card-play mr-3 flex items-center justify-start cursor-pointer" onclick="playCardRecording(this)">
     <svg xmlns="http://www.w3.org/2000/svg"
@@ -466,6 +504,16 @@ function rCard(name = "Untitled", data = [], index = 0) {
           </div>
           <div
             class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
+            role="menuitem" tabindex="-1" @click="open = false;" onclick="renameRecording(this)">
+            <div>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            </div>
+            <span>Rename</span>
+          </div>
+          <div
+            class="flex gap-2 justify-start items-center px-4 py-2 hover:bg-slate-200 dark:hover:bg-slate-600"
             role="menuitem" tabindex="-1" @click="open = false;" onclick="deleteRecording(this)">
             <div>
               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -481,250 +529,249 @@ function rCard(name = "Untitled", data = [], index = 0) {
     </div>
   </div>
 </div>`;
-  let psHTML = new DOMParser().parseFromString(temp, "text/html");
-  return psHTML.querySelector(".vibr-card");
-}
-
-function syncDatabase() {
-  if (isLS) {
-    localStorage.setItem("VibratDatabase", JSON.stringify(Database));
-  }
-}
-
-function cancelRecording() {
-  resetRecording();
-  TBM.open("main");
-}
-
-function startRecording() {
-  isRecording = true;
-  isStopped = false;
-  stopBtn.dataset.action = "stop";
-  stopBtn.innerText = "Stop";
-  stopBtn.disabled = false;
-  saveBtn.disabled = true;
-  playBtn.disabled = true;
-  startTime = performance.now() || Date.now();
-  timeLoop = setInterval(() => {
-    let progress = id("seek-progress");
-    // console.log(timeElapsed, recordingDuration, timeElapsed / recordingDuration * 100 + "%");
-    progress.style.width = timeElapsed / recordingDuration * 100 + "%";
-    timeElapsed += 10;
-    if (timeElapsed > recordingDuration) {
-      stopRecording();
-    }
-  }, 10);
-}
-
-function stopRecording() {
-  clearInterval(timeLoop);
-  isStopped = true
-  console.log("Recording stopped.");
-  console.log("Snapshots:", snapshots);
-  let d = getData(snapshots);
-  stopBtn.innerText = "Record";
-  stopBtn.dataset.action = "record";
-  saveBtn.disabled = false;
-  playBtn.disabled = false;
-  console.log("Data", d)
-}
-
-function resetRecording() {
-  id("seek-progress").style.width = "0px";
-  seekBar.querySelectorAll(".bar-timestamp").forEach(el => {
-    el.remove();
-  });
-  data = [];
-  snapshots = [];
-  currentIndex = 0;
-  timeElapsed = 0;
-  startTime = 0;
-  clearInterval(timeLoop);
-  isRecording = false;
-  isPsCursorVisible = false;
-  isStopped = true;
-}
-
-function getData(snapshots) {
-  let d = []
-  for (let s in snapshots) {
-    d.push(snapshots[s].duration);
-    try {
-      d.push(snapshots[parseInt(s) + 1].start - snapshots[parseInt(s)].end);
-      console.log(parseInt(s), parseInt(s) + 1, "Interval:", snapshots[parseInt(s) + 1].start - snapshots[parseInt(s)].end);
-    }
-    catch (e) {
-      d.push(startTime + 60000 - snapshots[parseInt(s)].end);
-      console.log(parseFloat(startTime) + 60000, snapshots[parseInt(s)].end);
-      console.log("Error:", e);
-    }
-  }
-  return d;
-}
-
-function Tabs(tabs = [], selected = null) {
-  this.tabs = tabs;
-  this.current = selected;
-  this.add = function (tab) {
-    this.tabs.push(tab);
-  }
-  this.open = function (i) {
-    try {
-      id(this.current).classList.add("hidden");
-    }
-    catch { }
-    this.current = i;
-    try {
-      id(this.current).classList.remove("hidden");
-    }
-    catch {
-      throw new Error("Tab \"" + i + "\" does not exist.");
-    }
-  }
-}
-
-function toggleSaveDialog(bool = true, value = "Untitled") {
-  // stopRecording();
-  id("recording-name").value = value;
-  saveDialog["_x_dataStack"][0].open = bool;
-  return bool;
-}
-
-function Exists(name) {
-  return Database.recordings.filter(r => r.name == name).length == 0;
-}
-
-function saveData(name) {
-  console.log(getData(snapshots))
-  let i = 1;
-  let suffix = "";
-  while (!Exists(name + suffix)) {
-    suffix = ` (${i})`;
-    i++;
-  }
-  name += suffix;
-  Database.recordings.push({
-    name,
-    data: getData(snapshots)
-  });
-  syncDatabase();
-  paintRecordings();
-  resetRecording();
-  TBM.open("main");
-  console.log("data saved with name:", name)
-}
-
-function togglePlayerDialog(bool = true) {
-  // stopRecording();
-  console.log(playerDialog["_x_dataStack"])
-  playerDialog["_x_dataStack"][0].open = bool;
-  return bool;
-}
-
-function toggleInvalidFilePopup(bool = true) {
-  id("invalid-file-popup")["_x_dataStack"][0].open = bool;
-  return bool;
-}
-
-function toggleInstallPrompt(bool = true) {
-  if (bool) {
-    id("install-fab").classList.remove("hidden");
-  }
-  else {
-    id("install-fab").classList.add("hidden");
+    let psHTML = new DOMParser().parseFromString(temp, "text/html");
+    return psHTML.querySelector(".vibr-card");
   }
 
-  return !bool;
-}
-
-function stopPlayingRecording() {
-  navigator.vibrate(0);
-  clearInterval(playInterval);
-  togglePlayerDialog(false);
-  // id("track-play-icon").classList.remove("hidden");
-  // id("track-stop-icon").classList.add("hidden");
-  id("vibr-seek-progress").style.width = "0px";
-  playerSeekBar.querySelectorAll(".bar-timestamp").forEach(el => {
-    el.remove();
-  });
-}
-
-function playRecording(data, name = "Untitled") {
-  togglePlayerDialog(true);
-  navigator.vibrate(0);
-  data.pop();
-  let s = 0;
-  let playDuration = data.reduce((a, b) => parseFloat(a) + parseFloat(b));
-  let playTimeElapsed = 0;
-  id("track-name").innerText = name;
-  for (let x in data) {
-    if (x % 2 === 0) {
-      let ts = document.createElement("div");
-      ts.className = "bar-timestamp top-0 absolute h-full bg-blue-800 dark:bg-blue-500 rounded-md opacity-70";
-      console.log(playDuration)
-      ts.style.left = s / playDuration * 100 + "%";
-      ts.style.width = data[x] / playDuration * 100 + "%";
-      playerSeekBar.appendChild(ts);
+  function syncDatabase() {
+    if (isLS) {
+      localStorage.setItem("VibratDatabase", JSON.stringify(Database));
     }
-    s += data[x];
   }
-  navigator.vibrate(data);
-  playInterval = setInterval(() => {
-    let progress = id("vibr-seek-progress");
-    progress.style.width = playTimeElapsed / playDuration * 100 + "%";
-    playTimeElapsed += 10;
-    if (playTimeElapsed > playDuration) {
-      clearInterval(playInterval);
-      stopPlayingRecording();
-      togglePlayerDialog(false);
+
+  function cancelRecording() {
+    resetRecording();
+    TBM.open("main");
+  }
+
+  function startRecording() {
+    isRecording = true;
+    isStopped = false;
+    stopBtn.dataset.action = "stop";
+    stopBtn.innerText = "Stop";
+    stopBtn.disabled = false;
+    saveBtn.disabled = true;
+    playBtn.disabled = true;
+    startTime = performance.now() || Date.now();
+    timeLoop = setInterval(() => {
+      let progress = id("seek-progress");
+      progress.style.width = timeElapsed / recordingDuration * 100 + "%";
+      timeElapsed += 10;
+      if (timeElapsed > recordingDuration) {
+        stopRecording();
+      }
+    }, 10);
+  }
+
+  function stopRecording() {
+    clearInterval(timeLoop);
+    isStopped = true
+    console.log("Recording stopped.");
+    let d = getData(snapshots);
+    stopBtn.innerText = "Record";
+    stopBtn.dataset.action = "record";
+    saveBtn.disabled = false;
+    playBtn.disabled = false;
+  }
+
+  function resetRecording() {
+    id("seek-progress").style.width = "0px";
+    seekBar.querySelectorAll(".bar-timestamp").forEach(el => {
+      el.remove();
+    });
+    data = [];
+    snapshots = [];
+    currentIndex = 0;
+    timeElapsed = 0;
+    startTime = 0;
+    clearInterval(timeLoop);
+    isRecording = false;
+    isPsCursorVisible = false;
+    isStopped = true;
+  }
+
+  function getData(snapshots) {
+    let d = []
+    for (let s in snapshots) {
+      d.push(snapshots[s].duration);
+      try {
+        d.push(snapshots[parseInt(s) + 1].start - snapshots[parseInt(s)].end);
+      }
+      catch (e) {
+        d.push(startTime + 60000 - snapshots[parseInt(s)].end);
+      }
     }
-  }, 10);
-}
+    return d;
+  }
 
-let d = [406
-  , 1018.7000000476837
-  , 625.8999998569489
-  , 841.3000001907349
-  , 495.89999985694885
-  , 862
-  , 348.60000014305115
-  , 646.6999998092651
-  , 2927.600000143051
-  , 869.5999999046326
-  , 1831.2000000476837
-  , 2738
-  , 1019.9000000953674
-  , 930.3999998569489
-  , 1503.2000000476837
-  , 781
-  , 1883.5999999046326
-  , 756.3000001907349
-  , 2103.0999999046326
-  , 1063.4000000953674
-  , 1146.6999998092651
-  , 1362.5
-  , 2771.5
-  , 14632.600000143051
-  , 734.2999999523163
-  , 2571.4000000953674
-  , 2371.2999999523163
-  , 3041.2000000476837
-  , 1623.2999999523163
-  , 2105
-  , 999.7000000476837
-  , 2123.199999809265]
-// playRecording(d)
+  function Tabs(tabs = [], selected = null) {
+    this.tabs = tabs;
+    this.current = selected;
+    this.add = function (tab) {
+      this.tabs.push(tab);
+    }
+    this.open = function (i) {
+      try {
+        id(this.current).classList.add("hidden");
+      }
+      catch { }
+      this.current = i;
+      try {
+        id(this.current).classList.remove("hidden");
+      }
+      catch {
+        throw new Error("Tab \"" + i + "\" does not exist.");
+      }
+    }
+  }
+
+  function toggleSaveDialog(bool = true, value = "Untitled") {
+    // stopRecording();
+    id("recording-name").value = value;
+    saveDialog["_x_dataStack"][0].open = bool;
+    return bool;
+  }
+
+  function toggleRenameDialog(bool = true, value = "") {
+    // stopRecording();
+    id("rename-name").value = value;
+    id("rename-dialog")["_x_dataStack"][0].open = bool;
+    return bool;
+  }
+
+  function Exists(name) {
+    return Database.recordings.filter(r => r.name == name).length == 0;
+  }
+
+  function saveData(name) {
+    let i = 1;
+    let suffix = "";
+    while (!Exists(name + suffix)) {
+      suffix = ` (${i})`;
+      i++;
+    }
+    name += suffix;
+    Database.recordings.push({
+      name,
+      data: getData(snapshots)
+    });
+    syncDatabase();
+    paintRecordings();
+    resetRecording();
+    TBM.open("main");
+    console.log("data saved with name:", name)
+  }
+
+  function togglePlayerDialog(bool = true) {
+    // stopRecording();
+    playerDialog["_x_dataStack"][0].open = bool;
+    return bool;
+  }
+
+  function toggleInvalidFilePopup(bool = true) {
+    id("invalid-file-popup")["_x_dataStack"][0].open = bool;
+    return bool;
+  }
+
+  function toggleInstallPrompt(bool = true) {
+    if (bool) {
+      id("install-fab").classList.remove("hidden");
+    }
+    else {
+      id("install-fab").classList.add("hidden");
+    }
+
+    return !bool;
+  }
+
+  function stopPlayingRecording() {
+    vibrate(0);
+    clearInterval(playInterval);
+    togglePlayerDialog(false);
+    // id("track-play-icon").classList.remove("hidden");
+    // id("track-stop-icon").classList.add("hidden");
+    id("vibr-seek-progress").style.width = "0px";
+    playerSeekBar.querySelectorAll(".bar-timestamp").forEach(el => {
+      el.remove();
+    });
+  }
+
+  function playRecording(data, name = "Untitled") {
+    togglePlayerDialog(true);
+    vibrate(0);
+    data.pop();
+    let s = 0;
+    let playDuration = data.reduce((a, b) => parseFloat(a) + parseFloat(b));
+    let playTimeElapsed = 0;
+    id("track-name").innerText = name;
+    for (let x in data) {
+      if (x % 2 === 0) {
+        let ts = document.createElement("div");
+        ts.className = "bar-timestamp top-0 absolute h-full bg-blue-800 dark:bg-blue-500 rounded-md opacity-70";
+        ts.style.left = s / playDuration * 100 + "%";
+        ts.style.width = data[x] / playDuration * 100 + "%";
+        playerSeekBar.appendChild(ts);
+      }
+      s += data[x];
+    }
+    vibrate(data);
+    playInterval = setInterval(() => {
+      let progress = id("vibr-seek-progress");
+      progress.style.width = playTimeElapsed / playDuration * 100 + "%";
+      playTimeElapsed += 10;
+      if (playTimeElapsed > playDuration) {
+        clearInterval(playInterval);
+        stopPlayingRecording();
+        togglePlayerDialog(false);
+      }
+    }, 10);
+  }
+
+  let d = [406
+    , 1018.7000000476837
+    , 625.8999998569489
+    , 841.3000001907349
+    , 495.89999985694885
+    , 862
+    , 348.60000014305115
+    , 646.6999998092651
+    , 2927.600000143051
+    , 869.5999999046326
+    , 1831.2000000476837
+    , 2738
+    , 1019.9000000953674
+    , 930.3999998569489
+    , 1503.2000000476837
+    , 781
+    , 1883.5999999046326
+    , 756.3000001907349
+    , 2103.0999999046326
+    , 1063.4000000953674
+    , 1146.6999998092651
+    , 1362.5
+    , 2771.5
+    , 14632.600000143051
+    , 734.2999999523163
+    , 2571.4000000953674
+    , 2371.2999999523163
+    , 3041.2000000476837
+    , 1623.2999999523163
+    , 2105
+    , 999.7000000476837
+    , 2123.199999809265]
+  // playRecording(d)
 
 
-let loadTime = performance.now() - window.__LOAD_START;
-window.__LAOD_TIME = loadTime;
-if (loadTime > 2000) {
-  window.__IS_LOADED = true;
-  TBM.open("main");
-}
-else {
-  setTimeout(() => {
+  let loadTime = performance.now() - window.__LOAD_START;
+  window.__LAOD_TIME = loadTime;
+  if (loadTime > 2000) {
     window.__IS_LOADED = true;
     TBM.open("main");
-  }, 2000 - loadTime);
+  }
+  else {
+    setTimeout(() => {
+      window.__IS_LOADED = true;
+      TBM.open("main");
+    }, 2000 - loadTime);
+  }
 }
