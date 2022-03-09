@@ -58,7 +58,7 @@ else {
 
   let swManager = new ServiceWorkerManager("/sw.js");
 
-  swManager.init();
+  // swManager.init();
 
   addEventListener("load", () => {
     let deferredPrompt;
@@ -370,6 +370,11 @@ else {
   });
   id("fab").addEventListener("click", startNewRecording);
 
+  id("menu-btn").addEventListener("click", () => { toggleSidebar(true); });
+  id("close-menu-btn").addEventListener("click", () => { toggleSidebar(false); });
+  id("sponsors-go-back-btn").addEventListener("click", () => {
+    TBM.open("main");
+  });
 
   function paintRecordings() {
     recordingsContainer.innerHTML = "";
@@ -635,6 +640,11 @@ else {
     // stopRecording();
     id("recording-name").value = value;
     saveDialog["_x_dataStack"][0].open = bool;
+    return bool;
+  }
+
+  function toggleSidebar(bool = true) {
+    id("sidebar")["_x_dataStack"][0].open = bool;
     return bool;
   }
 
