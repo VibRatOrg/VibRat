@@ -9,7 +9,7 @@ self.addEventListener('message', function (event) {
 });
 
 // TODO: Update the cacheName Everytime you want to update your cache
-const cacheName = "v1.0.8";
+const cacheName = "v1.0.9";
 const cacheKeepList = [cacheName] // Add Other names of cache that you don't want to delete
 
 // custom base64

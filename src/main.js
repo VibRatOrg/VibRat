@@ -58,7 +58,7 @@ else {
 
   let swManager = new ServiceWorkerManager("/sw.js");
 
-  // swManager.init();
+  swManager.init();
 
   addEventListener("load", () => {
     let deferredPrompt;
