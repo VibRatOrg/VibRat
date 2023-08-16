@@ -2,6 +2,11 @@
   "theme_color": "#2563eb",
   "background_color": "#ffffff",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "browser"
+  ],
   "id": "/",
   "scope": "/",
   "start_url": "/",
@@ -167,6 +172,28 @@
       ]
     }
   ],
+  "screenshots" : [
+    {
+      "src": "/assets/desktop_homepage.jpg",
+      "type": "image/jpg",
+      "platform": "wide",
+    },
+    {
+      "src": "/assets/desktop_recording.jpg",
+      "type": "image/jpg",
+      "platform": "wide",
+    },
+    {
+      "src": "/assets/mobile_homepage.jpg",
+      "type": "image/jpg",
+      "platform": "narrow",
+    },
+    {
+      "src": "/assets/mobile_recording.jpg",
+      "type": "image/jpg",
+      "platform": "narrow",
+    }
+  ],
   "launch_handler": {
     "client_mode": ["navigate-existing, auto"]
   },
@@ -176,6 +203,7 @@
       "url": "/play?path=%s"
     }
   ],
+  "prefer_related_applications": false,
   "related_applications": [
     {
       "platform": "webapp",
