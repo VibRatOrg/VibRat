@@ -176,22 +176,22 @@
     {
       "src": "/assets/desktop_homepage.jpg",
       "type": "image/jpg",
-      "platform": "wide",
+      "platform": "wide"
     },
     {
       "src": "/assets/desktop_recording.jpg",
       "type": "image/jpg",
-      "platform": "wide",
+      "platform": "wide"
     },
     {
       "src": "/assets/mobile_homepage.jpg",
       "type": "image/jpg",
-      "platform": "narrow",
+      "platform": "narrow"
     },
     {
       "src": "/assets/mobile_recording.jpg",
       "type": "image/jpg",
-      "platform": "narrow",
+      "platform": "narrow"
     }
   ],
   "launch_handler": {
